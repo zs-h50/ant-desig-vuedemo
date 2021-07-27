@@ -1,7 +1,9 @@
 # vuespringboot
+
 前端 Vue2+ant design of vue 1.7
 ##目前实现登录页面
-##首页已完成部分
+##首页已完成部分，欢迎页也OK
+
 ## Project setup
 ```
 npm install
