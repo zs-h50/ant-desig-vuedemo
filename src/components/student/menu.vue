@@ -50,6 +50,7 @@
 <script>
 	import Welcome from '@/components/Welcome.vue'
 	import UserList from '@/components/student/UserList.vue'
+<<<<<<< HEAD
 	const columns = [{
 			title: 'Full Name',
 			width: 100,
@@ -136,6 +137,8 @@
 			address: `London Park no. ${i}`,
 		});
 	}
+=======
+>>>>>>> 853250745a8985d818ab05d9a73ca08de1a6cdc5
 	export default {
 		data() {
 			return {
@@ -146,7 +149,10 @@
 		components: {
 			Welcome,
 			UserList,
+<<<<<<< HEAD
 
+=======
+>>>>>>> 853250745a8985d818ab05d9a73ca08de1a6cdc5
 		},
 		watch: {
 			openKeys(val) {
