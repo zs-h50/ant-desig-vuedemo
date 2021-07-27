@@ -7,6 +7,7 @@ import Welcome from '../components/Welcome.vue'
 import ScoreList from '../components/student/ScoreList.vue'
 import TeamList from '../components/student/TeamList.vue'
 import TeacherList from '../components/student/TeacherList.vue'
+import Index from '../views/teacher/index.vue'
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -31,6 +32,14 @@ const routes = [
 		{path:'scorelist',name: '操作2',component: ScoreList},
 		{path:'teamlist',name: '操作3',component: TeamList},
 		{path:'teacherlist',name: '操作4',component: TeacherList},
+	]
+  },
+  {
+	path:'/index',
+	name:'老师首页',
+	component:Index,
+	children:[
+		{path:'welcome',name: '老师端欢迎页面',component: Welcome},
 	]
   },
   

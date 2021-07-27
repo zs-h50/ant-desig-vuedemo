@@ -21,6 +21,15 @@
 						<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
 					</a-input>
 				</a-form-item>
+				
+				<a-form-item>
+					<a-radio-group v-model="value" @change="onChange">
+						<a-radio :value="1">学生</a-radio>
+						<a-radio :value="2">老师</a-radio>
+					</a-radio-group>
+					
+				</a-form-item>
+				
 				<a-form-item>
 					<a-checkbox v-decorator="[
 				        'remember',
@@ -59,7 +68,7 @@
 				username: 'admin',
 				password: 'admin123',
 				// 身份的认定
-				identity: '',
+				value: "1",
 			}
 		},
 		beforeCreate() {
@@ -72,16 +81,30 @@
 				//还差判断是否是学生或老师,再加一个判断实现,可以利用
 				this.form.validateFields((err, values) => {
 					if (values.username == this.username && values.password == this.password) {
-						this.$message.success('登录成功');
-						this.$router.push({
-							path: '/indexs/welcome'
-						})
+						if(this.value == 1){
+							this.$message.success('登录成功');
+							this.$router.push({
+								path: '/indexs/welcome'
+							})
+						}else if(this.value == 2){
+							this.$message.success('登录成功');
+							this.$router.push({
+								path:'/index/welcome'
+							})
+						}else{
+							this.$message.error("该用户不存在！请重新登录！");
+							this.form.resetFields();
+						}
+						
 					} else {
 						this.$message.error('用户名或密码错误,请重新输入!');
 						// 表单清空
-						this.form.resetFields()
+						this.form.resetFields();
 					}
 				});
+			},
+			onChange(e){
+				console.log('radio checked', e.target.value);
 			},
 		},
 		components: {
