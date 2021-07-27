@@ -15,11 +15,11 @@
 						</template>
 						<a-menu-item key="1">
 							<!-- 操作 1 -->
-							<router-link to="/indexs/userList">操作 1</router-link>
+							<router-link to="userlist">操作 1</router-link>
 						</a-menu-item>
 						<a-menu-item key="2">
 							<!-- 操作 2 -->
-							<router-link to="">操作 2</router-link>
+							<router-link to="scorelist">操作 2</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="g2">
@@ -28,11 +28,11 @@
 						</template>
 						<a-menu-item key="3">
 							<!-- 操作 3 -->
-							<router-link to="">操作 3</router-link>
+							<router-link to="teamlist">操作 3</router-link>
 						</a-menu-item>
 						<a-menu-item key="4">
 							<!-- 操作 4 -->
-							<router-link to="">操作 4</router-link>
+							<router-link to="teacherlist">操作 4</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
@@ -50,95 +50,9 @@
 <script>
 	import Welcome from '@/components/Welcome.vue'
 	import UserList from '@/components/student/UserList.vue'
-<<<<<<< HEAD
-	const columns = [{
-			title: 'Full Name',
-			width: 100,
-			dataIndex: 'name',
-			key: 'name',
-			fixed: 'left'
-		},
-		{
-			title: 'Age',
-			width: 100,
-			dataIndex: 'age',
-			key: 'age',
-			fixed: 'left'
-		},
-		{
-			title: 'Column 1',
-			dataIndex: 'address',
-			key: '1',
-			width: 150
-		},
-		{
-			title: 'Column 2',
-			dataIndex: 'address',
-			key: '2',
-			width: 150
-		},
-		{
-			title: 'Column 3',
-			dataIndex: 'address',
-			key: '3',
-			width: 150
-		},
-		{
-			title: 'Column 4',
-			dataIndex: 'address',
-			key: '4',
-			width: 150
-		},
-		{
-			title: 'Column 5',
-			dataIndex: 'address',
-			key: '5',
-			width: 150
-		},
-		{
-			title: 'Column 6',
-			dataIndex: 'address',
-			key: '6',
-			width: 150
-		},
-		{
-			title: 'Column 7',
-			dataIndex: 'address',
-			key: '7',
-			width: 150
-		},
-		{
-			title: 'Column 8',
-			dataIndex: 'address',
-			key: '8',
-			width: 150
-		},
-		{
-			title: 'Column 9',
-			dataIndex: 'address',
-			key: '9'
-		},
-		{
-			title: 'Action',
-			key: 'operation',
-			fixed: 'right',
-			width: 100,
-			scopedSlots: {
-				customRender: 'action'
-			},
-		},
-	];
-	const data = [];
-	for (let i = 0; i < 100; i++) {
-		data.push({
-			key: i,
-			name: `Edrward ${i}`,
-			age: 32,
-			address: `London Park no. ${i}`,
-		});
-	}
-=======
->>>>>>> 853250745a8985d818ab05d9a73ca08de1a6cdc5
+	import ScoreList from '@/components/student/ScoreList.vue'
+	import TeamList from '@/components/student/TeamList.vue'
+	import TeacherList from '@/components/student/TeacherList.vue'
 	export default {
 		data() {
 			return {
@@ -149,10 +63,9 @@
 		components: {
 			Welcome,
 			UserList,
-<<<<<<< HEAD
-
-=======
->>>>>>> 853250745a8985d818ab05d9a73ca08de1a6cdc5
+			ScoreList,
+			TeamList,
+			TeacherList,
 		},
 		watch: {
 			openKeys(val) {
