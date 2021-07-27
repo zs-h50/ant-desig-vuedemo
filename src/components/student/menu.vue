@@ -14,10 +14,12 @@
 							<a-icon type="user" /><span> 个人信息</span>
 						</template>
 						<a-menu-item key="1">
-							操作 1
+							<!-- 操作 1 -->
+							<router-link to="/indexs/userList">操作 1</router-link>
 						</a-menu-item>
 						<a-menu-item key="2">
-							操作 2
+							<!-- 操作 2 -->
+							<router-link to="">操作 2</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="g2">
@@ -25,10 +27,12 @@
 							<a-icon type="solution" /><span> 班级信息</span>
 						</template>
 						<a-menu-item key="3">
-							操作 3
+							<!-- 操作 3 -->
+							<router-link to="">操作 3</router-link>
 						</a-menu-item>
 						<a-menu-item key="4">
-							操作 4
+							<!-- 操作 4 -->
+							<router-link to="">操作 4</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
@@ -36,18 +40,16 @@
 		</a-layout-sider>
 		<!-- 右边的内容 -->
 		<a-layout-content style="padding:15px 15px 15px 75px;">
-			<Welcome></Welcome>
-			<!-- 				<a-table :columns="columns" :data-source="data" :scroll="{ x: 1800, y: 300 }">
-					    <a slot="action" slot-scope="text">action</a>
-					  </a-table> -->
-			<!-- <slot></slot> -->
+			<!-- 路由匹配到的组件将渲染在这里 -->
+			<router-view></router-view>
+			<!-- <Welcome></Welcome> -->
 		</a-layout-content>
 	</a-layout>
 </template>
 
 <script>
 	import Welcome from '@/components/Welcome.vue'
-
+	import UserList from '@/components/student/UserList.vue'
 	const columns = [{
 			title: 'Full Name',
 			width: 100,
@@ -125,7 +127,6 @@
 			},
 		},
 	];
-
 	const data = [];
 	for (let i = 0; i < 100; i++) {
 		data.push({
@@ -138,14 +139,14 @@
 	export default {
 		data() {
 			return {
-				current: ['mail'],
+				// current: ['mail'],
 				openKeys: ['sub1'],
-				data,
-				columns
 			}
 		},
 		components: {
 			Welcome,
+			UserList,
+
 		},
 		watch: {
 			openKeys(val) {

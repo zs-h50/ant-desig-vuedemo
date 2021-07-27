@@ -74,7 +74,7 @@
 					if (values.username == this.username && values.password == this.password) {
 						this.$message.success('登录成功');
 						this.$router.push({
-							path: '/indexs'
+							path: '/indexs/welcome'
 						})
 					} else {
 						this.$message.error('用户名或密码错误,请重新输入!');
