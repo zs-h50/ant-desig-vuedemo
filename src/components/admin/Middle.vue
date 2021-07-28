@@ -7,33 +7,47 @@
 				mode="inline" @click="handleClick" theme="dark">
 				<a-sub-menu key="sub" @titleClick="titleClick">
 					<span slot="title">
-						<a-icon type="bars" /><span>菜单选项</span>
+						<a-icon type="user" /><span>用户管理</span>
 					</span>
 					<a-menu-item-group key="t1">
 						<template slot="title">
-							<a-icon type="user" /><span> 个人信息</span>
+							<a-icon type="user" /><span>学生管理</span>
 						</template>
 						<a-menu-item key="1">
 							<!-- 操作 1 -->
-							<router-link to="myself">查看个人信息</router-link>
+							<router-link to="">学生信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="2">
 							<!-- 操作 2 -->
-							<router-link to="editmyself">修改个人信息</router-link>
+							<router-link to="">学生家庭信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="t2">
 						<template slot="title">
-							<a-icon type="solution" /><span> 学校信息</span>
+							<a-icon type="solution" /><span> 老师管理</span>
 						</template>
 						<a-menu-item key="3">
-							<router-link to="score">成绩</router-link>
-						</a-menu-item>
-						<a-menu-item key="4">
-							<router-link to="course">课程</router-link>
+							<router-link to="">老师信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
+				<a-sub-menu key="sub2" @titleClick="titleClick">
+				        <span slot="title"><a-icon type="appstore" /><span>学校管理</span></span>
+				        <a-menu-item key="4">
+				          操作 4
+				        </a-menu-item>
+				        <a-menu-item key="5">
+				          操作 5
+				        </a-menu-item>
+				        <a-sub-menu key="sub3" title="Submenu">
+				          <a-menu-item key="6">
+				            操作 6
+				          </a-menu-item>
+				          <a-menu-item key="7">
+				            操作 7
+				          </a-menu-item>
+				        </a-sub-menu>
+				      </a-sub-menu>
 			</a-menu>
 		</a-layout-sider>
 		<!-- 右边的内容 -->
@@ -46,10 +60,6 @@
 
 <script>
 	import Welcome from '../Welcome.vue'
-	import Myself from './Myself.vue'
-	import EditMyself from './EditMyself.vue'
-	import Score from './Score.vue'
-	import Course from './Course.vue'
 	export default {
 		data() {
 			return {
@@ -58,10 +68,6 @@
 		},
 		components: {
 			Welcome,
-			Myself,
-			EditMyself,
-			Score,
-			Course,
 		},
 		watch: {
 			openKeys(val) {

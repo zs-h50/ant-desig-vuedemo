@@ -21,18 +21,26 @@
 							<!-- 操作 2 -->
 							<router-link to="scorelist">操作 2</router-link>
 						</a-menu-item>
-					</a-menu-item-group>
-					<a-menu-item-group key="g2">
-						<template slot="title">
-							<a-icon type="solution" /><span> 班级信息</span>
-						</template>
 						<a-menu-item key="3">
 							<!-- 操作 3 -->
-							<router-link to="teamlist">操作 3</router-link>
+							<router-link to="scorelist">操作 3</router-link>
 						</a-menu-item>
 						<a-menu-item key="4">
 							<!-- 操作 4 -->
-							<router-link to="teacherlist">操作 4</router-link>
+							<router-link to="scorelist">操作 4</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+					<a-menu-item-group key="g2">
+						<template slot="title">
+							<a-icon type="solution" /><span> 学校信息</span>
+						</template>
+						<a-menu-item key="5">
+							<!-- 操作 5 -->
+							<router-link to="teamlist">操作 5</router-link>
+						</a-menu-item>
+						<a-menu-item key="6">
+							<!-- 操作 6 -->
+							<router-link to="teacherlist">操作 6</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>

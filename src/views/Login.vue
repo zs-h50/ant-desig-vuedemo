@@ -7,7 +7,7 @@
 				<h2 class="logintitle">用户登录</h2>
 				<a-form-item>
 					<a-input v-decorator="[
-				        'username',
+				        'account',
 				        { rules: [{ required: true, message: '用户名不能为空' }] },
 				      ]" placeholder="用户名">
 						<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
@@ -23,11 +23,17 @@
 				</a-form-item>
 				
 				<a-form-item>
-					<a-radio-group v-model="value" @change="onChange">
-						<a-radio :value="1">学生</a-radio>
-						<a-radio :value="2">老师</a-radio>
-					</a-radio-group>
-					
+					<div v-decorator="[
+				        'value',
+				        { rules: [{ required: true, message: '请选择用户选项！' }] },
+				      ]" type="radio">
+						<a-radio-group>
+							<a-radio :value="0">管理员</a-radio>
+							<a-radio :value="1">学生</a-radio>
+							<a-radio :value="2">老师</a-radio>
+						</a-radio-group>
+					</div>
+
 				</a-form-item>
 				
 				<a-form-item>
@@ -40,7 +46,7 @@
 				      ]">
 						记住我
 					</a-checkbox>
-					<a class="login-form-forgot" href="">
+					<a class="login-form-forgot" href="/retrieve">
 						找回密码
 					</a>
 					<a-button type="primary" html-type="submit" class="login-form-button">
@@ -61,14 +67,18 @@
 	import TSCarousel from '../components/TSCarousel.vue'
 	// import router from "@/router";
 	import router from '../router/index.js'
+	import request from '../utils/request.js'
+	import axios from 'axios'
 	export default {
 		name: "Login",
 		data() {
 			return {
-				username: 'admin',
-				password: 'admin123',
-				// 身份的认定
-				value: "1",
+				value:"1",
+				fromdata:{
+					account:'',
+					password:'',
+					identity:'',
+				}
 			}
 		},
 		beforeCreate() {
@@ -80,31 +90,43 @@
 				//先校验表单然后在判断
 				//还差判断是否是学生或老师,再加一个判断实现,可以利用
 				this.form.validateFields((err, values) => {
-					if (values.username == this.username && values.password == this.password) {
-						if(this.value == 1){
-							this.$message.success('登录成功');
-							this.$router.push({
-								path: '/indexs/welcome'
-							})
-						}else if(this.value == 2){
-							this.$message.success('登录成功');
-							this.$router.push({
-								path:'/index/welcome'
-							})
-						}else{
-							this.$message.error("该用户不存在！请重新登录！");
-							this.form.resetFields();
-						}
-						
-					} else {
-						this.$message.error('用户名或密码错误,请重新输入!');
-						// 表单清空
-						this.form.resetFields();
+					if(!err){
+						console.log(values)
+						this.fromdata.account = values.account;
+						this.fromdata.password = values.password;
+						this.fromdata.identity = values.value;
+						//转JSON格式
+						const data = JSON.parse(JSON.stringify(this.fromdata))
+						request.post('/api/login',data)
+						 .then(res =>{
+							 if(this.value == 0){
+							 	this.$message.success('管理员，登录成功');
+							 	this.$router.push({
+							 		path: '/admin/welcome'
+							 	})
+							 }else if(this.value == 1){
+							 	this.$message.success('学生，登录成功');
+							 	this.$router.push({
+							 		path: '/indexs/welcome'
+							 	})
+							 }else if(this.value == 2){
+							 	this.$message.success('老师，登录成功');
+							 	this.$router.push({
+							 		path:'/index/welcome'
+							 	})
+							 }else{
+							 	this.$message.error("该用户不存在！请重新登录！");
+							 	this.form.resetFields();
+							 }
+						 })
+						 .catch(error =>{
+							 this.$message.error('用户名或密码错误,请重新输入!');
+							 // 表单清空
+							 this.form.resetFields();
+							 console.log(error);
+						 })
 					}
 				});
-			},
-			onChange(e){
-				console.log('radio checked', e.target.value);
 			},
 		},
 		components: {

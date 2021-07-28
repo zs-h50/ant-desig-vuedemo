@@ -8,6 +8,13 @@ import ScoreList from '../components/student/ScoreList.vue'
 import TeamList from '../components/student/TeamList.vue'
 import TeacherList from '../components/student/TeacherList.vue'
 import Index from '../views/teacher/index.vue'
+import Retrieve from '../views/Retrieve.vue'
+import Myself from '../components/teacher/Myself.vue'
+import EditMyself from '../components/teacher/EditMyself.vue'
+import Score from '../components/teacher/Score.vue'
+import Course from '../components/teacher/Course.vue'
+import Admin from '../views/admin/admin.vue'
+import Operate from '../components/admin/Operate.vue'
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -21,6 +28,11 @@ const routes = [
     path: '/',
     name: '登录页',
     component: Login
+  },
+  {
+    path: '/retrieve',
+    name: '找回密码页',
+    component: Retrieve
   },
   {
     path: '/indexs',
@@ -40,9 +52,22 @@ const routes = [
 	component:Index,
 	children:[
 		{path:'welcome',name: '老师端欢迎页面',component: Welcome},
+		{path:'myself',name:'老师个人信息',component:Myself},
+		{path:'editmyself',name:'修改个人信息',component:EditMyself},
+		{path:'score',name:'成绩',component:Score},
+		{path:'course',name:'课程',component:Course},
+		
 	]
   },
-  
+  {
+	  path:'/admin',
+	  name:'管理员首页',
+	  component:Admin,
+	  children:[
+		  {path:'welcome',name: '管理员欢迎页面',component: Welcome},
+		  {path:'operate' ,name:'操作',component:Operate},
+	  ]
+  }
 ]
 
 const router = new VueRouter({
