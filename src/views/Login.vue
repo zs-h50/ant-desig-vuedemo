@@ -28,9 +28,9 @@
 				        { rules: [{ required: true, message: '请选择用户选项！' }] },
 				      ]" type="radio">
 						<a-radio-group>
-							<a-radio :value="0">管理员</a-radio>
-							<a-radio :value="1">学生</a-radio>
-							<a-radio :value="2">老师</a-radio>
+							<a-radio value="0">管理员</a-radio>
+							<a-radio value="1">学生</a-radio>
+							<a-radio value="2">老师</a-radio>
 						</a-radio-group>
 					</div>
 
@@ -73,7 +73,7 @@
 		name: "Login",
 		data() {
 			return {
-				value:"1",
+				value:"",
 				fromdata:{
 					account:'',
 					password:'',
