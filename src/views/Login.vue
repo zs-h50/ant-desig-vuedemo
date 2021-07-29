@@ -21,10 +21,10 @@
 						<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
 					</a-input>
 				</a-form-item>
-				
+
 				<a-form-item>
 					<div v-decorator="[
-				        'value',
+				        'identity',
 				        { rules: [{ required: true, message: '请选择用户选项！' }] },
 				      ]" type="radio">
 						<a-radio-group>
@@ -33,9 +33,8 @@
 							<a-radio value="2">老师</a-radio>
 						</a-radio-group>
 					</div>
-
 				</a-form-item>
-				
+
 				<a-form-item>
 					<a-checkbox v-decorator="[
 				        'remember',
@@ -73,12 +72,7 @@
 		name: "Login",
 		data() {
 			return {
-				value:"",
-				fromdata:{
-					account:'',
-					password:'',
-					identity:'',
-				}
+				
 			}
 		},
 		beforeCreate() {
@@ -90,41 +84,39 @@
 				//先校验表单然后在判断
 				//还差判断是否是学生或老师,再加一个判断实现,可以利用
 				this.form.validateFields((err, values) => {
-					if(!err){
+					if (!err) {
 						console.log(values)
-						this.fromdata.account = values.account;
-						this.fromdata.password = values.password;
-						this.fromdata.identity = values.value;
-						//转JSON格式
-						const data = JSON.parse(JSON.stringify(this.fromdata))
-						request.post('/api/login',data)
-						 .then(res =>{
-							 if(this.value == 0){
-							 	this.$message.success('管理员，登录成功');
-							 	this.$router.push({
-							 		path: '/admin/welcome'
-							 	})
-							 }else if(this.value == 1){
-							 	this.$message.success('学生，登录成功');
-							 	this.$router.push({
-							 		path: '/indexs/welcome'
-							 	})
-							 }else if(this.value == 2){
-							 	this.$message.success('老师，登录成功');
-							 	this.$router.push({
-							 		path:'/index/welcome'
-							 	})
-							 }else{
-							 	this.$message.error("该用户不存在！请重新登录！");
-							 	this.form.resetFields();
-							 }
-						 })
-						 .catch(error =>{
-							 this.$message.error('用户名或密码错误,请重新输入!');
-							 // 表单清空
-							 this.form.resetFields();
-							 console.log(error);
-						 })
+						//转JSON格式,转不转都无所谓
+						const fromdata = JSON.parse(JSON.stringify(values))
+						request.post('/api/login', fromdata)
+							.then(res => {
+								sessionStorage.setItem("user",JSON.stringify(res.data))
+								if (res.data.identity == 0) {
+									this.$message.success('管理员，登录成功');
+									this.$router.push({
+										path: '/admin/welcome'
+									})
+								} else if (res.data.identity == 1) {
+									this.$message.success('学生，登录成功');
+									this.$router.push({
+										path: '/indexs/welcome'
+									})
+								} else if (res.data.identity == 2) {
+									this.$message.success('老师，登录成功');
+									this.$router.push({
+										path: '/index/welcome'
+									})
+								} else {
+									this.$message.error("该用户不存在！请重新登录！");
+									this.form.resetFields();									
+								}
+								console.log(res)
+							})
+							.catch(error => {
+								this.$message.error('用户名或密码错误,请重新输入!');
+								this.form.resetFields();
+								console.log(error)
+							})
 					}
 				});
 			},

@@ -1,129 +1,138 @@
 <template>
-	<a-table :columns="columns" :data-source="data" bordered>
-		<template v-for="col in ['name', 'age', 'address']" :slot="col" slot-scope="text, record, index">
-			<div :key="col">
-				<a-input v-if="record.editable" style="margin: -5px 0" :value="text"
-					@change="e => handleChange(e.target.value, record.key, col)" />
-				<template v-else>
-					{{ text }}
-				</template>
-			</div>
-		</template>
-		<template slot="operation" slot-scope="text, record, index">
-			<div class="editable-row-operations">
-				<span v-if="record.editable">
-					<a @click="() => save(record.key)">Save</a>
-					<a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.key)">
-						<a>Cancel</a>
-					</a-popconfirm>
-				</span>
-				<span v-else>
-					<a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
-				</span>
-			</div>
-		</template>
-	</a-table>
+	<!-- 放8条数据 -->
+	<div>
+		<a-button class="editable-add-btn" @click="handleAdd" type="primary">
+			新增
+		</a-button>
+		<a-table bordered :data-source="dataSource" :columns="columns">
+			
+			<!-- EditableCell组件渲染的地方 -->
+			<template slot="id" slot-scope="text, record">
+				<editable-cell :text="text" @change="onCellChange(record.key, 'id', $event)" />
+			</template>
+<!-- 			<template slot="account" slot-scope="text, record">
+				<editable-cell :text="text" @change="onCellChange(record.key, 'account', $event)" />
+			</template>
+			<template slot="password" slot-scope="text, record">
+				<editable-cell :text="text" @change="onCellChange(record.key, 'password', $event)" />
+			</template> -->
+			
+			<template slot="operation" slot-scope="text, record">
+				<a-popconfirm v-if="dataSource.length" title="是否要删除?" @confirm="() => onDelete(record.key)">
+					<a href="javascript:;">删除</a>
+				</a-popconfirm>
+			</template>
+		</a-table>
+	</div>
 </template>
 <script>
-	const columns = [{
-			title: 'name',
-			dataIndex: 'name',
-			width: '25%',
-			scopedSlots: {
-				customRender: 'name'
-			},
-		},
-		{
-			title: 'age',
-			dataIndex: 'age',
-			width: '15%',
-			scopedSlots: {
-				customRender: 'age'
-			},
-		},
-		{
-			title: 'address',
-			dataIndex: 'address',
-			width: '40%',
-			scopedSlots: {
-				customRender: 'address'
-			},
-		},
-		{
-			title: 'operation',
-			dataIndex: 'operation',
-			scopedSlots: {
-				customRender: 'operation'
-			},
-		},
-	];
-
-	const data = [];
-	for (let i = 0; i < 100; i++) {
-		data.push({
-			key: i.toString(),
-			name: `Edrward ${i}`,
-			age: 32,
-			address: `London Park no. ${i}`,
-		});
-	}
+	//组件
+	import EditableCell from './EditableCell.vue'
 	export default {
+		components: {
+			EditableCell,
+		},
 		data() {
-			this.cacheData = data.map(item => ({
-				...item
-			}));
 			return {
-				data,
-				columns,
-				editingKey: '',
+				dataSource: [{
+						key: '0',
+						id:"1",
+						account: 'Edward King 0',
+						password: '32',
+						identity: 'London, Park Lane no. 0',
+					},
+					{
+						key: '1',
+						id:"2",
+						account: 'Edward King 1',
+						password: '32',
+						identity: 'London, Park Lane no. 1',
+					},
+				],
+				count: 2,
+				columns: [
+					{
+						title: 'ID',
+						dataIndex: 'id',
+						width:'15%',
+						align:"center",
+						scopedSlots: {
+							customRender: 'id'
+						},
+					},
+					{
+						title: '用户',
+						dataIndex: 'account',
+						width: '15%',
+						align:"center",
+						scopedSlots: {
+							customRender: 'account'
+						},
+					},
+					{
+						title: '密码',
+						dataIndex: 'password',
+						width: '15%',
+						align:"center",
+						scopedSlots: {
+							customRender: 'password'
+						},
+					},
+					{
+						title: '身份',
+						dataIndex: 'identity',
+						width: '15%',
+						align:"center",
+						scopedSlots: {
+							customRender: 'identity'
+						},
+					},
+					{
+						title: '操作',
+						dataIndex: 'operation',
+						align:"center",
+						scopedSlots: {
+							customRender: 'operation'
+						},
+					},
+				],
 			};
 		},
 		methods: {
-			handleChange(value, key, column) {
-				const newData = [...this.data];
-				const target = newData.filter(item => key === item.key)[0];
+			onCellChange(key, dataIndex, value) {
+				const dataSource = [...this.dataSource];
+				const target = dataSource.find(item => item.key === key);
 				if (target) {
-					target[column] = value;
-					this.data = newData;
+					target[dataIndex] = value;
+					this.dataSource = dataSource;
 				}
 			},
-			edit(key) {
-				const newData = [...this.data];
-				const target = newData.filter(item => key === item.key)[0];
-				this.editingKey = key;
-				if (target) {
-					target.editable = true;
-					this.data = newData;
-				}
+			onDelete(key) {
+				const dataSource = [...this.dataSource];
+				this.dataSource = dataSource.filter(item => item.key !== key);
 			},
-			save(key) {
-				const newData = [...this.data];
-				const newCacheData = [...this.cacheData];
-				const target = newData.filter(item => key === item.key)[0];
-				const targetCache = newCacheData.filter(item => key === item.key)[0];
-				if (target && targetCache) {
-					delete target.editable;
-					this.data = newData;
-					Object.assign(targetCache, target);
-					this.cacheData = newCacheData;
-				}
-				this.editingKey = '';
-			},
-			cancel(key) {
-				const newData = [...this.data];
-				const target = newData.filter(item => key === item.key)[0];
-				this.editingKey = '';
-				if (target) {
-					Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
-					delete target.editable;
-					this.data = newData;
-				}
+			handleAdd() {
+				const {
+					count,
+					dataSource
+				} = this;
+				const newData = {
+					key: count,
+					id:String(count+1) ,
+					account: `Edward King ${count}`,
+					password: 32,
+					identity: `London, Park Lane no. ${count}`,
+				};
+				this.dataSource = [...dataSource, newData];
+				this.count = count + 1;
 			},
 		},
 	};
 </script>
-<style scoped>
-	.editable-row-operations a {
-		margin-right: 8px;
+<style>
+
+
+	.editable-add-btn {
+		margin-bottom: 8px;
 	}
 </style>

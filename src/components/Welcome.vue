@@ -1,6 +1,6 @@
 <template>
 	<div style="padding:15px 15px 15px 75px;text-align: center;font-size: 20px;">
-		<h1>欢迎 ？？？使用系统</h1>
+		<h1>欢迎 {{username.account}}使用系统</h1>
 		<span>当前时间：{{currentTime}}</span>
 	</div>
 </template>
@@ -11,6 +11,7 @@
 			return {
 				timer: '', //定义一个定时器的变量
 				currentTime: new Date(), //获取当前时间
+				username:'',
 			}
 		},
 		created() {
@@ -39,6 +40,11 @@
 			if (this.timer) {
 				clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
 			}
+		},
+		mounted() {
+			
+			const user = sessionStorage.getItem("user");
+			this.username = JSON.parse(user);
 		}
 	}
 </script>

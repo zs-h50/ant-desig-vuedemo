@@ -5,11 +5,11 @@
 			  
 		      <a class="ant-dropdown-link" @click="e => e.preventDefault()">
 			  <a-avatar style="backgroundColor:#87d068" icon="user" />
-		        李云龙 <a-icon type="down" />
+		        {{username.account}} <a-icon type="down" />
 		      </a>
 		      <a-menu slot="overlay">
 		        <a-menu-item>
-		          <a href="/login">退出登录</a>
+		          <a href="/login" @click="removeid()">退出登录</a>
 		        </a-menu-item>
 		      </a-menu>
 		    </a-dropdown>
@@ -17,6 +17,24 @@
 </template>
 
 <script>
+	const username = '';
+	export default {
+		data() {
+			return{
+				username,
+			}
+		},
+		methods:{
+			removeid(){
+				sessionStorage.removeItem('user');
+			}
+		},
+		mounted() {
+			
+			const user = sessionStorage.getItem("user");
+			this.username = JSON.parse(user);
+		}
+	}
 </script>
 
 <style>

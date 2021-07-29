@@ -5,49 +5,49 @@
 			<!-- :default-selected-keys="['2']" 默认选择导航栏的选项 -->
 			<a-menu style="width: 256px;height:81vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
 				mode="inline" @click="handleClick" theme="dark">
-				<a-sub-menu key="sub" @titleClick="titleClick">
+				<!-- 第一个菜单选项 -->
+				<a-sub-menu key="sub1" @titleClick="titleClick">
 					<span slot="title">
-						<a-icon type="user" /><span>用户管理</span>
+						<a-icon type="unordered-list" /><span>用户管理</span>
 					</span>
-					<a-menu-item-group key="t1">
+					<a-menu-item-group key="g1">
 						<template slot="title">
-							<a-icon type="user" /><span>学生管理</span>
+							<a-icon type="user" /><span>用户信息</span>
 						</template>
 						<a-menu-item key="1">
-							<!-- 操作 1 -->
-							<router-link to="">学生信息</router-link>
-						</a-menu-item>
-						<a-menu-item key="2">
-							<!-- 操作 2 -->
-							<router-link to="">学生家庭信息</router-link>
-						</a-menu-item>
-					</a-menu-item-group>
-					<a-menu-item-group key="t2">
-						<template slot="title">
-							<a-icon type="solution" /><span> 老师管理</span>
-						</template>
-						<a-menu-item key="3">
-							<router-link to="">老师信息</router-link>
+							<router-link to="operate">用户</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
+
 				<a-sub-menu key="sub2" @titleClick="titleClick">
-				        <span slot="title"><a-icon type="appstore" /><span>学校管理</span></span>
-				        <a-menu-item key="4">
-				          操作 4
-				        </a-menu-item>
-				        <a-menu-item key="5">
-				          操作 5
-				        </a-menu-item>
-				        <a-sub-menu key="sub3" title="Submenu">
-				          <a-menu-item key="6">
-				            操作 6
-				          </a-menu-item>
-				          <a-menu-item key="7">
-				            操作 7
-				          </a-menu-item>
-				        </a-sub-menu>
-				      </a-sub-menu>
+					<span slot="title">
+						<a-icon type="unordered-list" /><span>学校管理</span>
+					</span>
+					<a-menu-item-group key="g2">
+						<template slot="title">
+							<a-icon type="user" /><span>学生信息</span>
+						</template>
+						<a-menu-item key="2">
+							<router-link to="">操作 1</router-link>
+						</a-menu-item>
+						<a-menu-item key="3">
+							<router-link to="">操作 2</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+					<a-menu-item-group key="g3">
+						<template slot="title">
+							<a-icon type="user" /><span>老师信息</span>
+						</template>
+						<a-menu-item key="4">
+							<router-link to="">操作 1</router-link>
+						</a-menu-item>
+						<a-menu-item key="5">
+							<router-link to="">操作 2</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+				</a-sub-menu>
+
 			</a-menu>
 		</a-layout-sider>
 		<!-- 右边的内容 -->
@@ -60,6 +60,7 @@
 
 <script>
 	import Welcome from '../Welcome.vue'
+	import Operate from './Operate.vue'
 	export default {
 		data() {
 			return {
@@ -68,6 +69,7 @@
 		},
 		components: {
 			Welcome,
+			Operate,
 		},
 		watch: {
 			openKeys(val) {
