@@ -29,20 +29,19 @@
 	//组件
 	import EditableCell from './EditableCell.vue'
 	export default {
-		components: {
-			EditableCell,
-		},
+
 		data() {
 			return {
-				dataSource: [{
-						key: '0',
+				dataSource: [
+					{
+						key: '1',
 						id:"1",
 						account: 'Edward King 0',
 						password: '32',
 						identity: 'London, Park Lane no. 0',
 					},
 					{
-						key: '1',
+						key: '2',
 						id:"2",
 						account: 'Edward King 1',
 						password: '32',
@@ -118,7 +117,7 @@
 				} = this;
 				const newData = {
 					key: count,
-					id:String(count+1) ,
+					id: String(count) ,
 					account: `Edward King ${count}`,
 					password: 32,
 					identity: `London, Park Lane no. ${count}`,
@@ -126,6 +125,9 @@
 				this.dataSource = [...dataSource, newData];
 				this.count = count + 1;
 			},
+		},
+		components: {
+			EditableCell,
 		},
 	};
 </script>
