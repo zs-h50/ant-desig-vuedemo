@@ -29,7 +29,7 @@
 							<a-icon type="user" /><span>学生信息</span>
 						</template>
 						<a-menu-item key="2">
-							<router-link to="">操作 1</router-link>
+							<router-link to="">查询</router-link>
 						</a-menu-item>
 						<a-menu-item key="3">
 							<router-link to="">操作 2</router-link>
@@ -61,6 +61,7 @@
 <script>
 	import Welcome from '../Welcome.vue'
 	import Operate from './Operate.vue'
+	import request from '@/utils/request.js'
 	export default {
 		data() {
 			return {
