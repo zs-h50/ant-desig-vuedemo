@@ -1,15 +1,17 @@
 <template>
 	<div id="app">
-		<router-view v-if="isRouterAlive" />
+		<a-config-provider :locale="locale">
+			<router-view v-if="isRouterAlive" />
+		</a-config-provider>
 	</div>
 </template>
 
 <script>
-	import zhCN from 'ant-design-vue/es/locale-provider/zh_CN';
+	import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 	export default {
 		data() {
 			return {
-				zhCN,
+				locale: zhCN,
 				isRouterAlive: true, //控制视图是否显示的变量
 			}
 		},

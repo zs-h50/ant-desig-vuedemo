@@ -29,7 +29,7 @@
 							<a-icon type="user" /><span>学生信息</span>
 						</template>
 						<a-menu-item key="2">
-							<router-link to="">查询</router-link>
+							<router-link to="studentinfo">个人信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="3">
 							<router-link to="">操作 2</router-link>
@@ -62,6 +62,7 @@
 	import Welcome from '../Welcome.vue'
 	import Operate from './Operate.vue'
 	import request from '@/utils/request.js'
+	import StudentInformation from './StudentInformation.vue'
 	export default {
 		data() {
 			return {
@@ -71,6 +72,7 @@
 		components: {
 			Welcome,
 			Operate,
+			StudentInformation,
 		},
 		watch: {
 			openKeys(val) {
