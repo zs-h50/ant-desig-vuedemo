@@ -1,17 +1,26 @@
 <template>
 	<a-table :columns="columns" :data-source="data" :scroll="{ x: 2950, y: 385 }" row-key="sId">
 		<!-- <a slot="action" slot-scope="text">action</a> -->
-		<a-button slot="action1" slot-scope="text" size="small" type="primary" icon="plus-square" @click="showModal">新增
-		</a-button>
-		<a-modal title="新增学生" :visible="visible" :confirm-loading="confirmLoading" @ok="handleOk"
-			@cancel="handleCancel">
-			<p>{{ ModalText }}</p>
-		</a-modal>
+			<a-button slot="action1"  slot-scope="text" size="small" @click="showModal()" type="primary" icon="plus-square">
+				新增
+				<a-modal
+				      title="新增"
+				      :visible="visible"
+				      @ok="handleOk"
+					  :footer="null"
+				      @cancel="handleCancel"
+				    >
+					<!-- 放个表单 -->
+					<AddEditFrom />
+				</a-modal>
+			</a-button>
+			
 		<a-button slot="action2" slot-scope="text" size="small" icon="form">编辑</a-button>
 		<a-button slot="action3" slot-scope="text" size="small" type="danger" icon="delete">删除</a-button>
 	</a-table>
 </template>
 <script>
+	import AddEditFrom from './AddEditFrom.vue'
 	const columns = [{
 			title: 'ID',
 			width: 100,
@@ -187,21 +196,16 @@
 				data,
 				columns,
 				visible: false,
-				confirmLoading: false,
 				ModalText: 'Content of the modal',
 			};
 		},
 		methods: {
 			showModal() {
 				this.visible = true;
+				//console.log(this.visible)
 			},
 			handleOk(e) {
-				this.ModalText = 'The modal will be closed after two seconds';
-				this.confirmLoading = true;
-				setTimeout(() => {
-					this.visible = false;
-					this.confirmLoading = false;
-				}, 2000);
+				
 			},
 			handleCancel(e) {
 				console.log('Clicked cancel button');
@@ -209,7 +213,7 @@
 			},
 		},
 		components: {
-
+			AddEditFrom,
 		},
 	};
 </script>
