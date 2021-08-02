@@ -9,10 +9,12 @@
 			<!-- 表单 -->
 			<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
 				<a-form-item label="用户名">
-					<a-input v-decorator="['account', { rules: [{ required: true, message: '用户名不能为空！' }] }]" placeholder="输入工号或者学号" />
+					<a-input v-decorator="['account', { rules: [{ required: true, message: '用户名不能为空！' }] }]"
+						placeholder="输入工号或者学号" />
 				</a-form-item>
 				<a-form-item label="密码">
-					<a-input v-decorator="['password', { rules: [{ required: true, message: '密码不能为空！' }] }]" placeholder="输入密码" />
+					<a-input v-decorator="['password', { rules: [{ required: true, message: '密码不能为空！' }] }]"
+						placeholder="输入密码" />
 				</a-form-item>
 				<a-form-item label="身份">
 					<a-select v-decorator="[
@@ -35,7 +37,7 @@
 				</a-form-item>
 			</a-form>
 		</a-modal>
-		
+
 		<!-- 表格 -->
 		<a-table bordered :data-source="dataSource" :columns="columns" :pagination="paginationOpt" row-key="id">
 			<!-- 编辑 -->
@@ -52,7 +54,8 @@
 
 			<!-- 删除按钮 -->
 			<template slot="operation" slot-scope="text, record">
-				<a-popconfirm v-if="dataSource.length" title="是否要删除?" ok-text="确定" cancel-text="取消" @confirm="() => onDelete(record.id)">
+				<a-popconfirm v-if="dataSource.length" title="是否要删除?" ok-text="确定" cancel-text="取消"
+					@confirm="() => onDelete(record.id)">
 					<a-button type="danger">删除</a-button>
 				</a-popconfirm>
 			</template>
@@ -110,7 +113,7 @@
 	]
 
 	export default {
-		inject:['reload'], //provide/inject可以轻松实现跨级访问父组件的数据
+		inject: ['reload'], //provide/inject可以轻松实现跨级访问父组件的数据
 		data() {
 			return {
 				dataSource: [{
@@ -134,15 +137,6 @@
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
-					onShowSizeChange: (current, pageSize) => {
-						this.paginationOpt.defaultCurrent = 1;
-						this.paginationOpt.defaultPageSize = pageSize;
-					},
-					// 改变每页数量时更新显示
-					onChange: (current, size) => {
-						this.paginationOpt.defaultCurrent = current;
-						this.paginationOpt.defaultPageSize = size;
-					},
 				},
 				columns,
 				count: 2,
@@ -152,20 +146,20 @@
 
 			};
 		},
-		created(){
+		created() {
 			this.load()
 		},
 		methods: {
 			//获取数据
 			load() {
 				request.post('/api/admin/operate')
-				.then(res => {
-					console.log(res.data)
-				 	this.dataSource = res.data
-				})
-				.catch(error =>{
-					console.log(error)
-				})
+					.then(res => {
+						console.log(res.data)
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						console.log(error)
+					})
 			},
 
 			// 编辑
@@ -174,39 +168,39 @@
 				const id = record.id;
 				const dataSource = [...this.dataSource];
 				const target = dataSource.find(item => item.id === id);
-				console.log(target)		//
+				console.log(target) //
 				if (target) {
-				 	target[dataIndex] = value;
+					target[dataIndex] = value;
 					console.log(value)
 					console.log("==========")
 					console.log(target[dataIndex])
 					console.log("==========")
 					console.log(dataSource)
-				 	this.dataSource = dataSource;
+					this.dataSource = dataSource;
 				}
 				const user = JSON.parse(JSON.stringify(target))
-				request.put("/api/admin/operate/update",user)
-				.then(res => {
-					this.$message.info('修改用户成功！！！');
-					// this.reload();
-				})
-				.catch(res =>{
-					this.$message.error('修改用户失败！！！');
-					this.reload();
-				})
+				request.put("/api/admin/operate/update", user)
+					.then(res => {
+						this.$message.success('修改用户成功！！！');
+						// this.reload();
+					})
+					.catch(res => {
+						this.$message.error('修改用户失败！！！');
+						this.reload();
+					})
 			},
 			// 删除
 			onDelete(id) {
 				console.log(id)
-				request.delete("/api/admin/operate/delete/"+id)
-				.then(res =>{
-					this.$message.info('删除用户成功！！！');
-					this.reload();
-				})
-				.catch(error =>{
-					this.$message.error('删除用户失败！！！');
-					this.reload();
-				})
+				request.delete("/api/admin/operate/delete/" + id)
+					.then(res => {
+						this.$message.success('删除用户成功！！！');
+						this.reload();
+					})
+					.catch(error => {
+						this.$message.error('删除用户失败！！！');
+						this.reload();
+					})
 			},
 			// 是否弹窗
 			showModal() {
@@ -224,18 +218,18 @@
 					if (!err) {
 						//打印表单的值
 						console.log(values);
-						request.post('/api/admin/operate/adds',datas)
-						.then(res =>{
-							//清空表单
-							this.$message.info('新增用户成功！！！');
-							this.form.resetFields(); 
-							this.reload();  //刷新
-						})
-						.catch(error =>{
-							this.$message.error('新增用户失败！！！');
-							this.form.resetFields();
-							this.reload(); //刷新
-						})
+						request.post('/api/admin/operate/adds', datas)
+							.then(res => {
+								//清空表单
+								this.$message.success('新增用户成功！！！');
+								this.form.resetFields();
+								this.reload(); //刷新
+							})
+							.catch(error => {
+								this.$message.error('新增用户失败！！！');
+								this.form.resetFields();
+								this.reload(); //刷新
+							})
 					}
 				});
 			},

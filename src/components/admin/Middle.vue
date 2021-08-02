@@ -32,17 +32,23 @@
 							<router-link to="studentinfo">个人信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="3">
-							<router-link to="">操作 2</router-link>
+							<router-link to="house">家庭信息</router-link>
+						</a-menu-item>
+						<a-menu-item key="4">
+							<router-link to="">课程信息</router-link>
+						</a-menu-item>
+						<a-menu-item key="5">
+							<router-link to="">成绩信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="g3">
 						<template slot="title">
 							<a-icon type="user" /><span>老师信息</span>
 						</template>
-						<a-menu-item key="4">
-							<router-link to="">操作 1</router-link>
+						<a-menu-item key="6">
+							<router-link to="">个人信息</router-link>
 						</a-menu-item>
-						<a-menu-item key="5">
+						<a-menu-item key="7">
 							<router-link to="">操作 2</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
@@ -63,6 +69,7 @@
 	import Operate from './Operate.vue'
 	import request from '@/utils/request.js'
 	import StudentInformation from './StudentInformation.vue'
+	import House from './House.vue'
 	export default {
 		data() {
 			return {
@@ -73,6 +80,7 @@
 			Welcome,
 			Operate,
 			StudentInformation,
+			House,
 		},
 		watch: {
 			openKeys(val) {
