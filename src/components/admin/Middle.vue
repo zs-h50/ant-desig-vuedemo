@@ -46,7 +46,7 @@
 							<a-icon type="user" /><span>老师信息</span>
 						</template>
 						<a-menu-item key="6">
-							<router-link to="">个人信息</router-link>
+							<router-link to="teacher">个人信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="7">
 							<router-link to="">操作 2</router-link>
@@ -70,6 +70,7 @@
 	import request from '@/utils/request.js'
 	import StudentInformation from './StudentInformation.vue'
 	import House from './House.vue'
+	import Teacher from './Teacher.vue'
 	export default {
 		data() {
 			return {
@@ -81,6 +82,7 @@
 			Operate,
 			StudentInformation,
 			House,
+			Teacher,
 		},
 		watch: {
 			openKeys(val) {

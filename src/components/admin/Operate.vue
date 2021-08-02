@@ -1,5 +1,4 @@
 <template>
-	<!-- 放8条数据 -->
 	<div>
 		<a-button class="editable-add-btn" @click="showModal" type="primary">
 			新增
@@ -30,7 +29,6 @@
 					</a-select>
 				</a-form-item>
 				<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-					<!-- 不缺失方法 -->
 					<a-button type="primary" html-type="submit">
 						创建
 					</a-button>

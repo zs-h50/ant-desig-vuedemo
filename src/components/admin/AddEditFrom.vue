@@ -75,7 +75,6 @@
 				</a-select-option>
 			</a-select>
 		</a-form-item>
-		<!-- 缺少remark -->
 		<a-form-item label="备注">
 			<a-input v-decorator="['remark', { rules: [{ required: false}] }]" placeholder="备注" />
 		</a-form-item>
