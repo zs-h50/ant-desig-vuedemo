@@ -114,9 +114,9 @@
 			</a-modal>
 		</a-button>
 		<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
-		<a-modal title="修改" :visibles="visibles" :footer="null" @cancel="handleCancels" >
+		<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels" >
 			<!-- 放个表单 -->
-			<a-form :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
+			<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
 				<a-form-item label="教师编号">
 					<a-input v-model:value="upform.tNo" v-decorator="['tNo', { rules: [{ required: true, message: '教师编号不能为空'}]}]"
 						placeholder="请输入教师编号" />
@@ -222,7 +222,7 @@
 						提交
 					</a-button>
 				</a-form-item>
-			</a-form>
+			</a-form-model>
 		</a-modal>
 		</a-button>
 		<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
@@ -374,6 +374,7 @@
 	}, ];
 
 	export default {
+		inject: ['reload'],
 		data() {
 			return {
 				formLayout: 'horizontal',
@@ -451,10 +452,21 @@
 						.catch(error =>{
 							this.$message.error("添加失败！")
 							this.form.resetFields();
-							//this.reload();  //刷新
+							this.reload();  //刷新
 						})
 					}
 				});
+			},
+			editSubmit(){
+				request.post('/api/admin/teacher/update',this.upform)
+				.then(res =>{
+					this.$message.success("修改成功！")
+					this.reload();  //刷新
+				})
+				.catch(error => {
+					this.$message.error("修改失败！")
+					this.reload();  //刷新
+				})
 			},
 			// 删除
 			delstu(id){
@@ -467,11 +479,8 @@
 				})
 				.catch(error =>{
 					this.$message.error("删除失败!!")
-					//this.reload();  //刷新
+					this.reload();  //刷新
 				})
-			},
-			editSubmit(){
-				
 			},
 		},
 		components:{

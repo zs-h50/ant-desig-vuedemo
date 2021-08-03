@@ -18,6 +18,9 @@ import Operate from '../components/admin/Operate.vue'
 import StudentInformation from '../components/admin/StudentInformation.vue'
 import House from '../components/admin/House.vue'
 import Teacher from '../components/admin/Teacher.vue'
+import Courses from '../components/admin/Course.vue'
+import Exam from '../components/admin/Exam.vue'
+import Fclass from '../components/admin/Fclass.vue'
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -71,7 +74,10 @@ const routes = [
 		  {path:'operate' ,name:'操作',component:Operate},
 		  {path:'studentinfo',name:'学生个人信息',component:StudentInformation},
 		  {path:'house',name:'学生家庭信息',component:House},
-		  {path:'teacher',name:'老师个人信息',component:Teacher}
+		  {path:'teacher',name:'老师个人信息',component:Teacher},
+		  {path:'courses',name:'课程信息',component:Courses},
+		  {path:'exam',name:'成绩信息',component:Exam},
+		  {path:'fclass',name:'班级信息',component:Fclass}		  
 	  ]
   }
 ]

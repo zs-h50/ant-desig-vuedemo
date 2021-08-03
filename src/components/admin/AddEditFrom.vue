@@ -92,6 +92,7 @@
 <script>
 	import request from '@/utils/request.js'
 	export default {
+		inject: ['reload'],
 		data() {
 			return {
 				formLayout: 'horizontal',

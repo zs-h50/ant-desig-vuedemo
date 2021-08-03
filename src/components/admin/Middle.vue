@@ -35,10 +35,10 @@
 							<router-link to="house">家庭信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="4">
-							<router-link to="">课程信息</router-link>
+							<router-link to="courses">课程信息</router-link>
 						</a-menu-item>
 						<a-menu-item key="5">
-							<router-link to="">成绩信息</router-link>
+							<router-link to="exam">成绩信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="g3">
@@ -50,6 +50,14 @@
 						</a-menu-item>
 						<a-menu-item key="7">
 							<router-link to="">操作 2</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+					<a-menu-item-group key="g4">
+						<template slot="title">
+							<a-icon type="home" /><span>班级管理</span>
+						</template>
+						<a-menu-item key="8">
+							<router-link to="fclass">班级信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
@@ -71,7 +79,11 @@
 	import StudentInformation from './StudentInformation.vue'
 	import House from './House.vue'
 	import Teacher from './Teacher.vue'
-	export default {
+	import Course from './Course.vue'
+	import Exam from './Exam.vue'
+	import Fclass from './Fclass.vue'
+ 	export default {
+		inject: ['reload'],
 		data() {
 			return {
 				openKeys: ['sub'],
@@ -83,6 +95,8 @@
 			StudentInformation,
 			House,
 			Teacher,
+			Exam,
+			Fclass
 		},
 		watch: {
 			openKeys(val) {
