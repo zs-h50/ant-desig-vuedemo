@@ -1,5 +1,5 @@
 <template>
-	<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1050, y: 385 }" :pagination="paginationOpt"
+	<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1450, y: 385 }" :pagination="paginationOpt"
 		row-key="eId">
 		
 		<span slot="Fettle" slot-scope="text,record">
@@ -157,6 +157,13 @@
 			key: 'course.cName',
 		},
 		{
+			title: '授课老师',
+			width: 100,
+			align: 'center',
+			dataIndex: 'teacher.tName',
+			key: 'teacher.tName',
+		},
+		{
 			title: '年份',
 			dataIndex: 'eYear',
 			key: '1',
@@ -164,9 +171,23 @@
 			align: 'center',
 		},
 		{
+			title: '班级名称',
+			dataIndex: 'fclass.classname',
+			key: '2',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级人数',
+			dataIndex: 'fclass.cNumber',
+			key: '3',
+			width: 150,
+			align: 'center',
+		},
+		{
 			title: '学期',
 			dataIndex: 'eSemester',
-			key: '2',
+			key: '4',
 			width: 150,
 			align: 'center',
 			scopedSlots:{
@@ -176,7 +197,7 @@
 		{
 			title: '状态',
 			dataIndex: 'eFettle',
-			key: '3',
+			key: '5',
 			width: 150,
 			align: 'center',
 			scopedSlots:{
@@ -186,7 +207,7 @@
 		{
 			title: '备注',
 			dataIndex: 'eRemark',
-			key: '4',
+			key: '6',
 			width: 150,
 			align: 'center',
 		},

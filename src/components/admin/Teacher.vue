@@ -1,5 +1,25 @@
 <template>
 	<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 2050, y: 385 }" :pagination="paginationOpt" row-key="tId">
+		<span slot="tGender" slot-scope="text,record" >
+			<span v-if="record.tGender == 0">女</span>
+			<span v-if="record.tGender == 1">男</span>
+		</span>
+		<span slot="tEducation" slot-scope="text,record" >
+			<span v-if="record.tEducation == 0">大专</span>
+			<span v-if="record.tEducation == 1">本科</span>
+			<span v-if="record.tEducation == 2">硕士</span>
+			<span v-if="record.tEducation == 3">博士</span>
+		</span>
+		<span slot="tDegree" slot-scope="text,record" >
+			<span v-if="record.tDegree == 0">学士</span>
+			<span v-if="record.tDegree == 1">硕士</span>
+			<span v-if="record.tDegree == 2">博士</span>
+			<span v-if="record.tDegree == 3">院士</span>
+		</span>
+		<span slot="tFettle" slot-scope="text,record" >
+			<span v-if="record.tDegree == 0">在职</span>
+			<span v-if="record.tDegree == 1">离职</span>
+		</span>
 		<a-button slot="action1" slot-scope="text,record" size="small" @click="showModal()" type="primary" icon="plus-square">
 			新增
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
@@ -260,6 +280,9 @@
 			key: '1',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'tGender'
+			},
 		},
 		{
 			title: '电话',
@@ -309,6 +332,9 @@
 			key: '8',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'tEducation'
+			},
 		},
 		{
 			title: '学位',
@@ -316,6 +342,9 @@
 			key: '9',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'tDegree'
+			},
 		},
 		{
 			title: '专业',
@@ -330,6 +359,9 @@
 			key: '11',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'tFettle'
+			},
 		},
 		{
 			title: '备注',

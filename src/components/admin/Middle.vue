@@ -24,10 +24,10 @@
 					<span slot="title">
 						<a-icon type="unordered-list" /><span>学校管理</span>
 					</span>
-					<a-menu-item-group key="g2">
-						<template slot="title">
-							<a-icon type="user" /><span>学生信息</span>
-						</template>
+					<a-sub-menu key="sub3">
+						<span  slot="title">
+							<a-icon type="caret-down" theme="filled" /><span>学生管理</span>
+						</span>
 						<a-menu-item key="2">
 							<router-link to="studentinfo">个人信息</router-link>
 						</a-menu-item>
@@ -40,28 +40,24 @@
 						<a-menu-item key="5">
 							<router-link to="exam">成绩信息</router-link>
 						</a-menu-item>
-					</a-menu-item-group>
-					<a-menu-item-group key="g3">
-						<template slot="title">
-							<a-icon type="user" /><span>老师信息</span>
-						</template>
+					</a-sub-menu>
+					<a-sub-menu key="sub4">
+						<span  slot="title">
+							<a-icon type="caret-down" theme="filled" /><span>老师管理</span>
+						</span>
 						<a-menu-item key="6">
 							<router-link to="teacher">个人信息</router-link>
 						</a-menu-item>
+					</a-sub-menu>
+					<a-sub-menu key="sub5">
+						<span  slot="title">
+							<a-icon type="caret-down" theme="filled" /><span>班级管理</span>
+						</span>
 						<a-menu-item key="7">
-							<router-link to="">操作 2</router-link>
-						</a-menu-item>
-					</a-menu-item-group>
-					<a-menu-item-group key="g4">
-						<template slot="title">
-							<a-icon type="home" /><span>班级管理</span>
-						</template>
-						<a-menu-item key="8">
 							<router-link to="fclass">班级信息</router-link>
 						</a-menu-item>
-					</a-menu-item-group>
+					</a-sub-menu>
 				</a-sub-menu>
-
 			</a-menu>
 		</a-layout-sider>
 		<!-- 右边的内容 -->

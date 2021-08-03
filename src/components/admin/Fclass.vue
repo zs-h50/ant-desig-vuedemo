@@ -29,9 +29,9 @@
 			</a-button>
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
+					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
 						<a-form-item label="班级标识">
-							<a-input v-model:value="upform" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+							<a-input v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
 								placeholder="请输入班级标识" />
 						</a-form-item>
 						<a-form-item label="班级名称">
@@ -174,7 +174,7 @@
 			onSearch(value) {
 				this.datas = value
 				console.log(value)
-				request.get('/api/admin/fclass/select/'+this.datas)
+				request.post('/api/admin/fclass/select/search',this.datas)
 				.then(res => {
 					this.dataSource = res.data
 				})
@@ -184,7 +184,47 @@
 				})
 			},
 			addSubmit(){
-				
+				this.form.validateFields((err, values) => {
+					if (!err) {
+						const datas = JSON.parse(JSON.stringify(values))
+						//console.log(values);
+						request.post('/api/admin/fclass/add',datas)
+						.then(res => {
+							this.$message.success("添加成功！")
+							this.form.resetFields();
+							this.reload();  //刷新
+						})
+						.catch(error =>{
+							this.$message.error("添加失败！")
+							this.form.resetFields();
+							this.reload();  //刷新
+						})
+					}
+				});
+			},
+			editSubmit(){
+				request.post('/api/admin/fclass/update',this.upform)
+				.then(res =>{
+					this.$message.success("修改成功！")
+					this.reload();  //刷新
+				})
+				.catch(error => {
+					this.$message.error("修改失败！")
+					this.reload();  //刷新
+				})
+			},
+			delstu(id) {
+				console.log(id)
+				//const sid = id
+				request.delete('/api/admin/fclass/delete/' + id)
+					.then(res => {
+						this.$message.success("删除成功!!")
+						this.reload(); //刷新
+					})
+					.catch(error => {
+						this.$message.error("删除失败!!")
+						this.reload();  //刷新
+					})
 			},
 		}
 	};
