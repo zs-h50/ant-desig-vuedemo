@@ -1,177 +1,279 @@
 <template>
 	<div>
-		<a-button class="editable-add-btn" @click="handleAdd">
-			Add
+		<a-input-search placeholder="请输入要搜索课程" enter-button="搜索" size="large" class="input-search"
+			@search="onSearch"/>
+			<a-button size="large" @click="showModal()" type="primary"
+			icon="plus-square">增加
+			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
+				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
+					<a-form-item label="学生标识">
+						<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
+							placeholder="请输入学生标识" />
+					</a-form-item>
+					<a-form-item label="班级标识">
+						<a-input v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+							placeholder="请输入班级标识" />
+					</a-form-item>
+					<a-form-item label="年份">
+						<a-input v-decorator="['aYears', { rules: [{ required: true, message: '年份不能为空'}]}]"
+							placeholder="请输入年份" />
+					</a-form-item>
+					<a-form-item label="学期">
+						<a-select  v-decorator="[
+					  'aSemester',
+					  { rules: [{ required: true, message: '学期不能为空' }] },
+					]" placeholder="选择学期">
+							<a-select-option value="1">
+								第一学期
+							</a-select-option>
+							<a-select-option value="2">
+								第二学期
+							</a-select-option>
+						</a-select>
+					</a-form-item>
+					<a-form-item label="课程成绩">
+						<a-input v-decorator="['aScore', { rules: [{ required: true, message: '课程成绩不能为空'}]}]"
+							placeholder="请输入课程成绩" />
+					</a-form-item>
+					
+					<a-form-item label="备注">
+						<a-input v-decorator="['aRemark', { rules: [{ required: true, message: '备注不能为空'}]}]"
+							placeholder="请输入备注" />
+					</a-form-item>
+					<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+						<a-button type="primary" html-type="submit">
+							提交
+						</a-button>
+					</a-form-item>
+				</a-form>	
+			</a-modal>
 		</a-button>
-		<a-table bordered :data-source="dataSource" :columns="columns">
-			<template slot="name" slot-scope="text, record">
-				<editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)" />
-			</template>
-			<template slot="operation" slot-scope="text, record">
-				<a-popconfirm v-if="dataSource.length" title="Sure to delete?" @confirm="() => onDelete(record.key)">
-					<a href="javascript:;">Delete</a>
-				</a-popconfirm>
-			</template>
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 600,y:385}" row-key="aId">
+			<span slot="aSemester" slot-scope="text,record">
+				<span v-if="record.aSemester == 1">第一学期</span>
+				<span v-if="record.aSemester == 2">第二学期</span>
+			</span>
+			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
+				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
+					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
+						<a-form-item label="学生标识">
+							<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
+								placeholder="请输入学生标识" />
+						</a-form-item>
+						<a-form-item label="班级标识">
+							<a-input v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+								placeholder="请输入班级标识" />
+						</a-form-item>
+						<a-form-item label="年份">
+							<a-input v-decorator="['aYears', { rules: [{ required: true, message: '年份不能为空'}]}]"
+								placeholder="请输入年份" />
+						</a-form-item>
+						<a-form-item label="学期">
+							<a-select  v-decorator="[
+						  'aSemester',
+						  { rules: [{ required: true, message: '学期不能为空' }] },
+						]" placeholder="选择学期">
+								<a-select-option value="1">
+									第一学期
+								</a-select-option>
+								<a-select-option value="2">
+									第二学期
+								</a-select-option>
+							</a-select>
+						</a-form-item>
+						<a-form-item label="课程成绩">
+							<a-input v-decorator="['aScore', { rules: [{ required: true, message: '课程成绩不能为空'}]}]"
+								placeholder="请输入课程成绩" />
+						</a-form-item>
+						
+						<a-form-item label="备注">
+							<a-input v-decorator="['aRemark', { rules: [{ required: true, message: '备注不能为空'}]}]"
+								placeholder="请输入备注" />
+						</a-form-item>
+						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+							<a-button type="primary" html-type="submit">
+								提交
+							</a-button>
+						</a-form-item>
+					</a-form-model>
+				</a-modal>
+			</a-button>
+			<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
+				@click="delstu(record.cId)">删除</a-button>
 		</a-table>
 	</div>
 </template>
 <script>
-	const EditableCell = {
-		template: `
-      <div class="editable-cell">
-        <div v-if="editable" class="editable-cell-input-wrapper">
-          <a-input :value="value" @change="handleChange" @pressEnter="check" /><a-icon
-            type="check"
-            class="editable-cell-icon-check"
-            @click="check"
-          />
-        </div>
-        <div v-else class="editable-cell-text-wrapper">
-          {{ value || ' ' }}
-          <a-icon type="edit" class="editable-cell-icon" @click="edit" />
-        </div>
-      </div>
-    `,
-		props: {
-			text: String,
+	import request from '@/utils/request.js'
+	const columns = [
+		{
+			title: '标识',
+			width: 100,
+			align:'center',
+			dataIndex: 'aId',
+			key: 'aId',
+			fixed: 'left'
 		},
-		data() {
-			return {
-				value: this.text,
-				editable: false,
-			};
+		{
+			title: '课程编号',
+			align:'center',
+			width: 100,
+			dataIndex: 'course.cNo',
+			key: '1'
 		},
-		methods: {
-			handleChange(e) {
-				const value = e.target.value;
-				this.value = value;
-			},
-			check() {
-				this.editable = false;
-				this.$emit('change', this.value);
-			},
-			edit() {
-				this.editable = true;
+		{
+			title: '课程名称',
+			align:'center',
+			width: 100,
+			dataIndex: 'course.cName',
+			key: '2'
+		},
+		{
+			title: '年份',
+			align:'center',
+			width: 100,
+			dataIndex: 'aYears',
+			key: '3'
+		},
+		{
+			title: '学期',
+			align:'center',
+			width: 100,
+			dataIndex: 'aSemester',
+			key: '4',
+			scopedSlots: {
+				customRender: 'aSemester'
 			},
 		},
-	};
+		{
+			title: '班级名称',
+			align:'center',
+			width: 100,
+			dataIndex: 'fclass.classname',
+			key: '5'
+		},
+		{
+			title: '备注',
+			align:'center',
+			width: 100,
+			dataIndex: 'aRemark',
+			key: '6'
+		},
+		{
+			title: '成绩',
+			key: '7',
+			dataIndex:'aScore',
+			fixed: 'right',
+			width: 100,
+			align:'center',
+		},
+		{
+			title: '操作',
+			key: 'operation2',
+			fixed: 'right',
+			width: 100,
+			scopedSlots: {
+				customRender: 'action2'
+			},
+		},
+		{
+			title: '操作',
+			key: 'operation3',
+			fixed: 'right',
+			width: 100,
+			scopedSlots: {
+				customRender: 'action3'
+			},
+		},
+	];
+
+	const dataSource = [{
+			aId:1,
+		},
+	];
+
 	export default {
-		components: {
-			EditableCell,
-		},
+		inject: ['reload'],
 		data() {
 			return {
-				dataSource: [{
-						key: '0',
-						name: 'Edward King 0',
-						age: '32',
-						address: 'London, Park Lane no. 0',
-					},
-					{
-						key: '1',
-						name: 'Edward King 1',
-						age: '32',
-						address: 'London, Park Lane no. 1',
-					},
-				],
-				count: 2,
-				columns: [{
-						title: 'name',
-						dataIndex: 'name',
-						width: '30%',
-						scopedSlots: {
-							customRender: 'name'
-						},
-					},
-					{
-						title: 'age',
-						dataIndex: 'age',
-					},
-					{
-						title: 'address',
-						dataIndex: 'address',
-					},
-					{
-						title: 'operation',
-						dataIndex: 'operation',
-						scopedSlots: {
-							customRender: 'operation'
-						},
-					},
-				],
+				columns,
+				formLayout: 'horizontal',
+				form: this.$form.createForm(this),
+				dataSource,
+				columns,
+				visible: false,
+				visibles: false,
+				paginationOpt: {
+					defaultCurrent: 1, // 默认当前页数
+					defaultPageSize: 8, // 默认当前页显示数据的大小
+					total: 0, // 总数，必须先有
+					showQuickJumper: true,
+					showTotal: (total) => `共 ${total} 条`, // 显示总数
+				},
+				upform: {
+					sId: '',
+					cId: '',
+					aYears: '',
+					aSemester: '',
+					aScore: '',
+					aRemark: '',
+				},
+				datas:'', //搜索框	
 			};
 		},
-		methods: {
-			onCellChange(key, dataIndex, value) {
-				const dataSource = [...this.dataSource];
-				const target = dataSource.find(item => item.key === key);
-				if (target) {
-					target[dataIndex] = value;
-					this.dataSource = dataSource;
-				}
-			},
-			onDelete(key) {
-				const dataSource = [...this.dataSource];
-				this.dataSource = dataSource.filter(item => item.key !== key);
-			},
-			handleAdd() {
-				const {
-					count,
-					dataSource
-				} = this;
-				const newData = {
-					key: count,
-					name: `Edward King ${count}`,
-					age: 32,
-					address: `London, Park Lane no. ${count}`,
-				};
-				this.dataSource = [...dataSource, newData];
-				this.count = count + 1;
-			},
+		created() {
+			const user = sessionStorage.getItem("user");
+			const users = JSON.parse(user);
+			this.dates = users.account; 
+			this.teacherexamload()
 		},
+		methods:{
+			showModal() {
+				this.visible = true
+			},
+			enditModal(record) {
+				this.upform = JSON.parse(JSON.stringify(record))
+				this.visibles = true
+			},
+			handleCancel(e) {
+				this.visible = false;
+			},
+			handleCancels(e) {
+				this.visibles = false;
+			},
+			teacherexamload(){
+				request.post('/api/teacher/exam/select',this.dates)
+				.then(res =>{
+					console.log(res.data)
+					this.dataSource = res.data
+				})
+				.catch(error =>{
+					this.$message.error("查询失败！")
+					//this.reload();
+				})
+			},
+			//添加
+			addSubmit(){
+				
+			},
+			onSearch(value){
+				console.log(value)
+				const result = value;
+				request.post('/api/admin/exam/select/search',result)
+				.then(res => {
+					this.dataSource = res.data
+				})
+				.catch(error=>{
+					this.$message.error("搜索失败！")
+					this.reload();
+				})
+			},
+		}
 	};
 </script>
-<style>
-	.editable-cell {
-		position: relative;
-	}
-
-	.editable-cell-input-wrapper,
-	.editable-cell-text-wrapper {
-		padding-right: 24px;
-	}
-
-	.editable-cell-text-wrapper {
-		padding: 5px 24px 5px 5px;
-	}
-
-	.editable-cell-icon,
-	.editable-cell-icon-check {
-		position: absolute;
-		right: 0;
-		width: 20px;
-		cursor: pointer;
-	}
-
-	.editable-cell-icon {
-		line-height: 18px;
-		display: none;
-	}
-
-	.editable-cell-icon-check {
-		line-height: 28px;
-	}
-
-	.editable-cell:hover .editable-cell-icon {
-		display: inline-block;
-	}
-
-	.editable-cell-icon:hover,
-	.editable-cell-icon-check:hover {
-		color: #108ee9;
-	}
-
-	.editable-add-btn {
-		margin-bottom: 8px;
+<style scoped>
+	.input-search{
+		width: 300px;
+		float: right;
 	}
 </style>

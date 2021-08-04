@@ -1,78 +1,167 @@
 <template>
-	<a-table :columns="columns" :data-source="data">
-		<a slot="name" slot-scope="text">{{ text }}</a>
-	</a-table>
+	<div>
+		<a-input-group compact>
+			<a-select :data-source="data" @change="onSearch" default-value="0">
+				<a-select-option value="0">
+					全部学期
+				</a-select-option>
+				<a-select-option value="1">
+					第一学期
+				</a-select-option>
+				<a-select-option value="2">
+					第二学期
+				</a-select-option>
+			</a-select>
+			<a-select :data-source="data" @change="onSearch" default-value="0" style="float: right;">
+				<a-select-option value="0">
+					全部学期
+				</a-select-option>
+				<a-select-option value="1">
+					第一学期
+				</a-select-option>
+				<a-select-option value="2">
+					第二学期
+				</a-select-option>
+			</a-select>
+		</a-input-group>
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1050, y: 385 }" :pagination="paginationOpt"
+			row-key="eId">
+			<span slot="Fettle" slot-scope="text,record">
+				<span v-if="record.eFettle == 0">开课</span>
+				<span v-if="record.eFettle == 1">结课</span>
+			</span>
+			<span slot="eSemester" slot-scope="text,record">
+				<span v-if="record.eSemester == 1">第一学期</span>
+				<span v-if="record.eSemester == 2">第二学期</span>
+			</span>
+		</a-table>
+	</div>
+
 </template>
 <script>
+	import request from '@/utils/request.js'
 	const columns = [{
-			title: 'Name',
-			dataIndex: 'name',
-			key: 'name',
+			title: 'ID',
+			width: 100,
+			align: 'center',
+			dataIndex: 'eId',
+			key: 'eId',
+			fixed: 'left'
+		},
+		{
+			title: '课程编号',
+			width: 100,
+			align: 'center',
+			dataIndex: 'course.cNo',
+			key: 'course.cNo',
+			fixed: 'left'
+		},
+		{
+			title: '课程名称',
+			width: 100,
+			align: 'center',
+			dataIndex: 'course.cName',
+			key: 'course.cName',
+		},
+		{
+			title: '年份',
+			dataIndex: 'eYear',
+			key: '1',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级名称',
+			dataIndex: 'fclass.classname',
+			key: '2',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级人数',
+			dataIndex: 'fclass.cNumber',
+			key: '3',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '学期',
+			dataIndex: 'eSemester',
+			key: '4',
+			width: 150,
+			align: 'center',
 			scopedSlots: {
-				customRender: 'name'
-			},
+				customRender: 'eSemester'
+			}
 		},
 		{
-			title: 'Age',
-			dataIndex: 'age',
-			key: 'age',
-			width: 80,
+			title: '状态',
+			dataIndex: 'eFettle',
+			key: '5',
+			width: 150,
+			align: 'center',
+			scopedSlots: {
+				customRender: 'Fettle'
+			}
 		},
 		{
-			title: 'Address',
-			dataIndex: 'address',
-			key: 'address 1',
-			ellipsis: true,
-		},
-		{
-			title: 'Long Column Long Column Long Column',
-			dataIndex: 'address',
-			key: 'address 2',
-			ellipsis: true,
-		},
-		{
-			title: 'Long Column Long Column',
-			dataIndex: 'address',
-			key: 'address 3',
-			ellipsis: true,
-		},
-		{
-			title: 'Long Column',
-			dataIndex: 'address',
-			key: 'address 4',
-			ellipsis: true,
+			title: '备注',
+			dataIndex: 'eRemark',
+			key: '6',
+			width: 150,
+			align: 'center',
 		},
 	];
 
-	const data = [{
-			key: '1',
-			name: 'John Brown',
-			age: 32,
-			address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-			tags: ['nice', 'developer'],
-		},
-		{
-			key: '2',
-			name: 'Jim Green',
-			age: 42,
-			address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-			tags: ['loser'],
-		},
-		{
-			key: '3',
-			name: 'Joe Black',
-			age: 32,
-			address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-			tags: ['cool', 'teacher'],
-		},
-	];
+	const dataSource = [{
+		eId: '1',
+	}, ];
 
 	export default {
+		inject: ['reload'],
 		data() {
 			return {
-				data,
+				formLayout: 'horizontal',
+				form: this.$form.createForm(this),
+				dataSource,
 				columns,
+				paginationOpt: {
+					defaultCurrent: 1, // 默认当前页数
+					defaultPageSize: 8, // 默认当前页显示数据的大小
+					total: 0, // 总数，必须先有
+					showQuickJumper: true,
+					showTotal: (total) => `共 ${total} 条`, // 显示总数
+				},
+				data: [],
 			};
+		},
+		created() {
+			const user = sessionStorage.getItem("user");
+			const users = JSON.parse(user);
+			this.dates = users.account;
+			this.courseload()
+		},
+		methods: {
+			courseload() {
+				request.post('/api/teacher/course/select', this.dates)
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+						//this.reload();  //刷新
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+			},
+			onSearch(value) {
+				console.log(value)
+			},
 		},
 	};
 </script>
+<style scoped>
+	.ainput {
+		float: right;
+	}
+</style>

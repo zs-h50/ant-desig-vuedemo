@@ -354,8 +354,5 @@
 				})
 			},
 		},
-		components:{
-			
-		},
 	};
 </script>
