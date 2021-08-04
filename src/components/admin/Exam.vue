@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<a-input-search placeholder="请输入要搜索学生姓名" enter-button="搜索" size="large" class="input-search"
+		<a-input-search placeholder="请输入要搜索课程" enter-button="搜索" size="large" class="input-search"
 			@search="onSearch"/>
-		<a-table :columns="columns" :data-source="data" :scroll="{ x: 1000 }" row-key="aId">
+		<a-table :columns="columns" :data-source="data" :scroll="{ x: 800 }" row-key="aId">
 			<span slot="aSemester" slot-scope="text,record">
 				<span v-if="record.aSemester == 1">第一学期</span>
 				<span v-if="record.aSemester == 2">第二学期</span>
@@ -20,21 +20,6 @@
 			dataIndex: 'aId',
 			key: 'aId',
 			fixed: 'left'
-		},
-		{
-			title: '学生姓名',
-			width: 100,
-			align:'center',
-			dataIndex: 'student.sName',
-			key: 'student.sName',
-			fixed: 'left'
-		},
-		{
-			title: '学号',
-			width: 100,
-			align:'center',
-			dataIndex: 'student.sNo',
-			key: 'student.sNo',
 		},
 		{
 			title: '课程编号',
@@ -130,7 +115,7 @@
 				const result = value;
 				request.post('/api/admin/exam/select/search',result)
 				.then(res => {
-					this.dataSource = res.data
+					this.data = res.data
 				})
 				.catch(error=>{
 					this.$message.error("搜索失败！")

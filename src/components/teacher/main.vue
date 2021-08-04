@@ -15,11 +15,7 @@
 						</template>
 						<a-menu-item key="1">
 							<!-- 操作 1 -->
-							<router-link to="myself">查看个人信息</router-link>
-						</a-menu-item>
-						<a-menu-item key="2">
-							<!-- 操作 2 -->
-							<router-link to="editmyself">修改个人信息</router-link>
+							<router-link to="myself">个人信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="t2">
@@ -31,6 +27,14 @@
 						</a-menu-item>
 						<a-menu-item key="4">
 							<router-link to="course">课程</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+					<a-menu-item-group key="t3">
+						<template slot="title">
+							<a-icon type="solution" /><span> 账户信息</span>
+						</template>
+						<a-menu-item key="5">
+							<router-link to="upteacher">修改密码</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
@@ -47,9 +51,9 @@
 <script>
 	import Welcome from '../Welcome.vue'
 	import Myself from './Myself.vue'
-	import EditMyself from './EditMyself.vue'
 	import Score from './Score.vue'
 	import Course from './Course.vue'
+	import Updataps from './Updataps.vue'
 	export default {
 		data() {
 			return {
@@ -59,9 +63,9 @@
 		components: {
 			Welcome,
 			Myself,
-			EditMyself,
 			Score,
 			Course,
+			Updataps,
 		},
 		watch: {
 			openKeys(val) {

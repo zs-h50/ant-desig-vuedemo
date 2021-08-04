@@ -49,7 +49,7 @@
 		    <a-date-picker v-decorator="['hBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]" style="width: 100%" />
 		</a-form-item>
 		<a-form-item label="身份证号码">
-			<a-input v-decorator="['hCard', { rules: [{ required: true, message: '身份证号码不能为空'}]}]"
+			<a-input v-decorator="['hCard', { rules: [{ required: true, message: '身份证号码不能为空'},{min:18,len:18,message: '请输入正确的格式'}]}]"
 				placeholder="请输入身份证号码" />
 		</a-form-item>
 		<a-form-item label="状态">

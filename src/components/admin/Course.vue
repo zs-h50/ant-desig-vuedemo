@@ -1,19 +1,9 @@
 <template>
-	<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1450, y: 385 }" :pagination="paginationOpt"
-		row-key="eId">
-		
-		<span slot="Fettle" slot-scope="text,record">
-			<span v-if="record.eFettle == 0">开课</span>
-			<span v-if="record.eFettle == 1">结课</span>
-		</span>
-		<span slot="eSemester" slot-scope="text,record">
-			<span v-if="record.eSemester == 1">第一学期</span>
-			<span v-if="record.eSemester == 2">第二学期</span>
-		</span>
-		
-		<a-button slot="action1" slot-scope="text,record" size="small" @click="showModal()" type="primary"
+	
+	<div>
+		<a-button size="small" @click="showModal()" type="primary"
 			icon="plus-square">
-			新增
+			授课
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
@@ -70,66 +60,82 @@
 				</a-form>
 			</a-modal>
 		</a-button>
-		<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
-			<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
-				<!-- 放个表单 -->
-				<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
-					<a-form-item label="班级标识">
-						<a-input v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
-							placeholder="请输入班级标识" />
-					</a-form-item>
-					<a-form-item label="课程标识">
-						<a-input v-model:value="upform.courseId" v-decorator="['courseId',{ rules: [{ required: true, message: '课程标识不能为空' }] },
-					]" placeholder="请输入课程标识"></a-input>
-					</a-form-item>
-					<a-form-item label="老师标识">
-						<a-input v-model:value="upform.tId" v-decorator="['tId', { rules: [{ required: true, message: '老师标识不能为空'}]}]"
-							placeholder="请输入老师标识" />
-					</a-form-item>
-					<a-form-item label="年份">
-						<a-input v-model:value="upform.eYear" v-decorator="['eYear', { rules: [{ required: true, message: '年份不能为空'}]}]"
-							placeholder="请输入年份" />
-					</a-form-item>
-					<a-form-item label="学期">
-						<a-select v-model:value="upform.eSemester" v-decorator="[
-						  'eSemester',
-						  { rules: [{ required: true, message: '学期不能为空' }] },
+		
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1350, y: 385 }" :pagination="paginationOpt"
+			row-key="eId">
+			
+			<span slot="Fettle" slot-scope="text,record">
+				<span v-if="record.eFettle == 0">开课</span>
+				<span v-if="record.eFettle == 1">结课</span>
+			</span>
+			<span slot="eSemester" slot-scope="text,record">
+				<span v-if="record.eSemester == 1">第一学期</span>
+				<span v-if="record.eSemester == 2">第二学期</span>
+			</span>
+			
+			
+			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
+				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
+					<!-- 放个表单 -->
+					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
+						<a-form-item label="班级标识">
+							<a-input v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+								placeholder="请输入班级标识" />
+						</a-form-item>
+						<a-form-item label="课程标识">
+							<a-input v-model:value="upform.courseId" v-decorator="['courseId',{ rules: [{ required: true, message: '课程标识不能为空' }] },
+						]" placeholder="请输入课程标识"></a-input>
+						</a-form-item>
+						<a-form-item label="老师标识">
+							<a-input v-model:value="upform.tId" v-decorator="['tId', { rules: [{ required: true, message: '老师标识不能为空'}]}]"
+								placeholder="请输入老师标识" />
+						</a-form-item>
+						<a-form-item label="年份">
+							<a-input v-model:value="upform.eYear" v-decorator="['eYear', { rules: [{ required: true, message: '年份不能为空'}]}]"
+								placeholder="请输入年份" />
+						</a-form-item>
+						<a-form-item label="学期">
+							<a-select v-model:value="upform.eSemester" v-decorator="[
+							  'eSemester',
+							  { rules: [{ required: true, message: '学期不能为空' }] },
+							]" placeholder="请选择">
+									<a-select-option value="1">
+										第一学期
+									</a-select-option>
+									<a-select-option value="2">
+										第二学期
+									</a-select-option>
+								</a-select>
+						</a-form-item>
+						<a-form-item label="状态">
+							<a-select v-model:value="upform.eFettle" v-decorator="[
+						  'eFettle',
+						  { rules: [{ required: true, message: '状态不能为空' }] },
 						]" placeholder="请选择">
-								<a-select-option value="1">
-									第一学期
+								<a-select-option value="0">
+									开课
 								</a-select-option>
-								<a-select-option value="2">
-									第二学期
+								<a-select-option value="1">
+									结课
 								</a-select-option>
 							</a-select>
-					</a-form-item>
-					<a-form-item label="状态">
-						<a-select v-model:value="upform.eFettle" v-decorator="[
-					  'eFettle',
-					  { rules: [{ required: true, message: '状态不能为空' }] },
-					]" placeholder="请选择">
-							<a-select-option value="0">
-								开课
-							</a-select-option>
-							<a-select-option value="1">
-								结课
-							</a-select-option>
-						</a-select>
-					</a-form-item>
-					<a-form-item label="备注">
-						<a-input v-model:value="upform.eRemark" v-decorator="['eRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
-					</a-form-item>
-					<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-						<a-button type="primary" html-type="submit">
-							提交
-						</a-button>
-					</a-form-item>
-				</a-form-model>
-			</a-modal>
-		</a-button>
-		<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
-			@click="delstu(record.eId)">删除</a-button>
-	</a-table>
+						</a-form-item>
+						<a-form-item label="备注">
+							<a-input v-model:value="upform.eRemark" v-decorator="['eRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
+						</a-form-item>
+						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+							<a-button type="primary" html-type="submit">
+								提交
+							</a-button>
+						</a-form-item>
+					</a-form-model>
+				</a-modal>
+			</a-button>
+			<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
+				@click="delstu(record.eId)">删除</a-button>
+		</a-table>
+	</div>
+	
 </template>
 <script>
 	import request from '@/utils/request.js'
@@ -212,17 +218,7 @@
 			align: 'center',
 		},
 		{
-			title: '操作1',
-			key: 'operation1',
-			fixed: 'right',
-			width: 100,
-			align: 'center',
-			scopedSlots: {
-				customRender: 'action1'
-			},
-		},
-		{
-			title: '操作2',
+			title: '操作',
 			key: 'operation2',
 			fixed: 'right',
 			width: 100,
@@ -232,7 +228,7 @@
 			},
 		},
 		{
-			title: '操作3',
+			title: '操作',
 			key: 'operation3',
 			fixed: 'right',
 			width: 100,

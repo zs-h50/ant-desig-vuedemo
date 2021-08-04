@@ -1,10 +1,10 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
 		<a-form-item label="姓名">
-			<a-input v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'}]}]" placeholder="请输入学生的姓名" />
+			<a-input v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'},{len:5, message: '长度大于5'}]}]" placeholder="请输入学生的姓名" />
 		</a-form-item>
 		<a-form-item label="学号">
-			<a-input v-decorator="['sNo', { rules: [{ required: true, message: '学生学号不能为空' }] }]" placeholder="请输入学生的学号" />
+			<a-input v-decorator="['sNo', { rules: [{ required: false, message: '学生学号不能为空' }] }]" placeholder="请输入学生的学号" />
 		</a-form-item>
 		<a-form-item label="性别">
 			<a-select v-decorator="[
@@ -20,17 +20,17 @@
 			</a-select>
 		</a-form-item>
 		<a-form-item label="联系方式">
-			<a-input v-decorator="['sPhone', { rules: [{ required: true, message: '学生联系方式不能为空' }] }]" placeholder="请输入学生的联系方式" />
+			<a-input v-decorator="['sPhone', { rules: [{ required: true, message: '学生联系方式不能为空' },{min:11,len:11,message: '请输入正确的格式'}] }]" placeholder="请输入学生的联系方式" />
 		</a-form-item>
 		<a-form-item label="邮箱">
-			<a-input v-decorator="['email', { rules: [{ required: true, message: '学生邮箱不能为空' }] }]" placeholder="请输入学生的邮箱方式" />
+			<a-input v-decorator="['email', { rules: [{ required: true, message: '学生邮箱不能为空' },{type:'email',message: '请输入正确的格式'}] }]" placeholder="请输入学生的邮箱方式" />
 		</a-form-item>
 		<!-- 出生日期 -->
 		<a-form-item label="出生日期" style="margin-bottom:0;">
 		    <a-date-picker v-decorator="['birthday', { rules: [{ required: true, message: '学生出生日期不能为空' }] }]" style="width: 100%" />
 		</a-form-item>
 		<a-form-item label="身份证号">
-			<a-input v-decorator="['idCard', { rules: [{ required: true, message: '学生身份证号不能为空' }] }]" placeholder="请输入学生的身份证号" />
+			<a-input v-decorator="['idCard', { rules: [{ required: true, message: '学生身份证号不能为空' },{min:18,len:18,message: '请输入正确的格式'}] }]" placeholder="请输入学生的身份证号" />
 		</a-form-item>
 		<a-form-item label="联系人">
 			<a-input v-decorator="['contact', { rules: [{ required: true, message: '学生联系人不能为空' }] }]" placeholder="请输入学生的联系人" />
@@ -42,7 +42,7 @@
 			<a-input v-decorator="['address', { rules: [{ required: true, message: '学生住址不能为空' }] }]" placeholder="请输入学生的住址" />
 		</a-form-item>
 		<a-form-item label="邮编">
-			<a-input v-decorator="['postcode', { rules: [{ required: true, message: '学生邮编不能为空' }] }]" placeholder="请输入学生的邮编" />
+			<a-input v-decorator="['postcode', { rules: [{ required: true, message: '学生邮编不能为空' },{min:5,len:5,message: '请输入正确的格式'}] }]" placeholder="请输入学生的邮编" />
 		</a-form-item>
 		<a-form-item label="家庭状况">
 			<a-input v-decorator="['situation', { rules: [{ required: false}] }]" placeholder="请输入学生的家庭状况" />

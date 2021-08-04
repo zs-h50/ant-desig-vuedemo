@@ -45,9 +45,9 @@
 				      ]">
 						记住我
 					</a-checkbox>
-					<a class="login-form-forgot" href="/retrieve">
+<!-- 					<a class="login-form-forgot" href="/retrieve">
 						找回密码
-					</a>
+					</a> -->
 					<a-button type="primary" html-type="submit" class="login-form-button">
 						登录
 					</a-button>
@@ -70,6 +70,7 @@
 	import axios from 'axios'
 	export default {
 		name: "Login",
+		inject: ['reload'],
 		data() {
 			return {
 				
@@ -108,14 +109,16 @@
 									})
 								} else {
 									this.$message.error("该用户不存在！请重新登录！");
-									this.form.resetFields();									
+									this.form.resetFields();
+									this.reload();									
 								}
 								console.log(res)
 							})
 							.catch(error => {
 								this.$message.error('用户名或密码错误,请重新输入!');
 								this.form.resetFields();
-								console.log(error)
+								this.reload();
+								//console.log(error)
 							})
 					}
 				});

@@ -20,6 +20,7 @@
 		data() {
 			return{
 				username,
+				date:'',
 			}
 		},
 		methods:{
@@ -28,7 +29,6 @@
 			}
 		},
 		mounted() {
-			
 			const user = sessionStorage.getItem("user");
 			this.username = JSON.parse(user);
 		}

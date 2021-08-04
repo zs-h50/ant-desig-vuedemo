@@ -10,7 +10,6 @@ import TeacherList from '../components/student/TeacherList.vue'
 import Index from '../views/teacher/index.vue'
 import Retrieve from '../views/Retrieve.vue'
 import Myself from '../components/teacher/Myself.vue'
-import EditMyself from '../components/teacher/EditMyself.vue'
 import Score from '../components/teacher/Score.vue'
 import Course from '../components/teacher/Course.vue'
 import Admin from '../views/admin/admin.vue'
@@ -21,6 +20,7 @@ import Teacher from '../components/admin/Teacher.vue'
 import Courses from '../components/admin/Course.vue'
 import Exam from '../components/admin/Exam.vue'
 import Fclass from '../components/admin/Fclass.vue'
+import Updataps from '../components/teacher/Updataps.vue'
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -59,9 +59,9 @@ const routes = [
 	children:[
 		{path:'welcome',name: '老师端欢迎页面',component: Welcome},
 		{path:'myself',name:'老师个人信息',component:Myself},
-		{path:'editmyself',name:'修改个人信息',component:EditMyself},
 		{path:'score',name:'成绩',component:Score},
 		{path:'course',name:'课程',component:Course},
+		{path:'upteacher',nane:'修改密码',component:Updataps}
 		
 	]
   },

@@ -12,6 +12,7 @@
 				timer: '', //定义一个定时器的变量
 				currentTime: new Date(), //获取当前时间
 				username:'',
+				date:'',
 			}
 		},
 		created() {
