@@ -11,36 +11,33 @@
 					</span>
 					<a-menu-item-group key="g1">
 						<template slot="title">
-							<a-icon type="user" /><span> 个人信息</span>
+							<a-icon type="user" /><span> 学生信息</span>
 						</template>
 						<a-menu-item key="1">
-							<!-- 操作 1 -->
-							<router-link to="userlist">操作 1</router-link>
-						</a-menu-item>
-						<a-menu-item key="2">
-							<!-- 操作 2 -->
-							<router-link to="scorelist">操作 2</router-link>
-						</a-menu-item>
-						<a-menu-item key="3">
-							<!-- 操作 3 -->
-							<router-link to="scorelist">操作 3</router-link>
-						</a-menu-item>
-						<a-menu-item key="4">
-							<!-- 操作 4 -->
-							<router-link to="scorelist">操作 4</router-link>
+							<!-- 操作 5 -->
+							<router-link to="studentlist">个人信息</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 					<a-menu-item-group key="g2">
 						<template slot="title">
 							<a-icon type="solution" /><span> 学校信息</span>
 						</template>
-						<a-menu-item key="5">
+						<a-menu-item key="2">
 							<!-- 操作 5 -->
-							<router-link to="teamlist">操作 5</router-link>
+							<router-link to="teacherlist">课程信息</router-link>
 						</a-menu-item>
-						<a-menu-item key="6">
+						<a-menu-item key="3">
 							<!-- 操作 6 -->
-							<router-link to="teacherlist">操作 6</router-link>
+							<router-link to="scorelist">成绩信息</router-link>
+						</a-menu-item>
+					</a-menu-item-group>
+					<a-menu-item-group key="g3">
+						<template slot="title">
+							<a-icon type="security-scan" /><span> 账户信息</span>
+						</template>
+						<a-menu-item key="4">
+							<!-- 操作 5 -->
+							<router-link to="upstudent">修改密码</router-link>
 						</a-menu-item>
 					</a-menu-item-group>
 				</a-sub-menu>
@@ -59,8 +56,8 @@
 	import Welcome from '@/components/Welcome.vue'
 	import UserList from '@/components/student/UserList.vue'
 	import ScoreList from '@/components/student/ScoreList.vue'
-	import TeamList from '@/components/student/TeamList.vue'
 	import TeacherList from '@/components/student/TeacherList.vue'
+	import Upstudent from './Upstudent.vue'
 	export default {
 		data() {
 			return {
@@ -72,8 +69,8 @@
 			Welcome,
 			UserList,
 			ScoreList,
-			TeamList,
 			TeacherList,
+			Upstudent,
 		},
 		watch: {
 			openKeys(val) {

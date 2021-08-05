@@ -37,7 +37,7 @@
 					</a-form-item>
 					
 					<a-form-item label="备注">
-						<a-input v-decorator="['aRemark', { rules: [{ required: true, message: '备注不能为空'}]}]"
+						<a-input v-decorator="['aRemark', { rules: [{ required: false, message: '备注不能为空'}]}]"
 							placeholder="请输入备注" />
 					</a-form-item>
 					<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
@@ -55,21 +55,21 @@
 			</span>
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
+					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="enditSubmit">
 						<a-form-item label="学生标识">
-							<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
+							<a-input disabled v-model:value="upform.sId" v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
 								placeholder="请输入学生标识" />
 						</a-form-item>
-						<a-form-item label="班级标识">
-							<a-input v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+						<a-form-item  label="班级标识">
+							<a-input disabled v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
 								placeholder="请输入班级标识" />
 						</a-form-item>
 						<a-form-item label="年份">
-							<a-input v-decorator="['aYears', { rules: [{ required: true, message: '年份不能为空'}]}]"
+							<a-input disabled v-model:value="upform.aYears" v-decorator="['aYears', { rules: [{ required: true, message: '年份不能为空'}]}]"
 								placeholder="请输入年份" />
 						</a-form-item>
 						<a-form-item label="学期">
-							<a-select  v-decorator="[
+							<a-select disabled v-model:value="upform.aSemester" v-decorator="[
 						  'aSemester',
 						  { rules: [{ required: true, message: '学期不能为空' }] },
 						]" placeholder="选择学期">
@@ -82,12 +82,12 @@
 							</a-select>
 						</a-form-item>
 						<a-form-item label="课程成绩">
-							<a-input v-decorator="['aScore', { rules: [{ required: true, message: '课程成绩不能为空'}]}]"
+							<a-input v-model:value="upform.aScore" v-decorator="['aScore', { rules: [{ required: true, message: '课程成绩不能为空'}]}]"
 								placeholder="请输入课程成绩" />
 						</a-form-item>
 						
 						<a-form-item label="备注">
-							<a-input v-decorator="['aRemark', { rules: [{ required: true, message: '备注不能为空'}]}]"
+							<a-input v-model:value="upform.aRemark" v-decorator="['aRemark', { rules: [{ required: false, message: '备注不能为空'}]}]"
 								placeholder="请输入备注" />
 						</a-form-item>
 						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
@@ -99,7 +99,7 @@
 				</a-modal>
 			</a-button>
 			<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
-				@click="delstu(record.cId)">删除</a-button>
+				@click="delstu(record.aId)">删除</a-button>
 		</a-table>
 	</div>
 </template>
@@ -112,6 +112,14 @@
 			align:'center',
 			dataIndex: 'aId',
 			key: 'aId',
+			fixed: 'left'
+		},
+		{
+			title: '学生姓名',
+			width: 100,
+			align:'center',
+			dataIndex: 'student.sName',
+			key: 'student.sName',
 			fixed: 'left'
 		},
 		{
@@ -254,7 +262,34 @@
 			},
 			//添加
 			addSubmit(){
-				
+				this.form.validateFields((err, values) => {
+					if (!err) {
+						const datae = JSON.parse(JSON.stringify(values))
+						//console.log(values);
+						request.post('/api/teacher/exam/add',datae)
+						.then(res => {
+							this.$message.success("添加成功！")
+							this.form.resetFields();
+							this.reload();  //刷新
+						})
+						.catch(error =>{
+							this.$message.error("暂无授课记录！")
+							this.form.resetFields();
+							//this.reload();  //刷新
+						})
+					}
+				});
+			},
+			enditSubmit(){
+				request.post('/api/teacher/exam/update',this.upform)
+				.then(res =>{
+					this.$message.success("修改成功！")
+					this.reload();  //刷新
+				})
+				.catch(error => {
+					this.$message.error("修改失败！")
+					this.reload();  //刷新
+				})
 			},
 			onSearch(value){
 				console.log(value)
@@ -268,6 +303,20 @@
 					this.reload();
 				})
 			},
+			
+			delstu(id){
+					console.log(id)
+					//const sid = id
+					request.delete('/api/teacher/exam/delete/'+id)
+					.then(res =>{
+						this.$message.success("删除成功!!")
+						this.reload();  //刷新
+					})
+					.catch(error =>{
+						this.$message.error("删除失败!!")
+						//this.reload();  //刷新
+					})
+				},
 		}
 	};
 </script>

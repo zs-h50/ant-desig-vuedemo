@@ -1,176 +1,174 @@
 <template>
-  <div>
-    <a-button class="editable-add-btn" @click="handleAdd">
-      增加
-    </a-button>
-    <a-table bordered :data-source="dataSource" :columns="columns">
-      <template slot="name" slot-scope="text, record">
-        <editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)" />
-      </template>
-      <template slot="operation" slot-scope="text, record">
-        <a-popconfirm
-          v-if="dataSource.length"
-          title="是否要删除?"
-          @confirm="() => onDelete(record.key)"
-        >
-          <a href="javascript:;">删除</a>
-        </a-popconfirm>
-      </template>
-    </a-table>
-  </div>
+	<div>
+		<a-input-search placeholder="请输入要搜索课程" enter-button="搜索" size="large" class="input-search" @search="onSearch"/>
+			<a-select style="float: right; " @change="Search" default-value="0">
+				<a-select-option value="0">
+					全部学期
+				</a-select-option>
+				<a-select-option value="1">
+					第一学期
+				</a-select-option>
+				<a-select-option value="2">
+					第二学期
+				</a-select-option>
+			</a-select>
+		<a-table :columns="columns" :data-source="data" :scroll="{ x: 800 }" row-key="aId">
+			<span slot="aSemester" slot-scope="text,record">
+				<span v-if="record.aSemester == 1">第一学期</span>
+				<span v-if="record.aSemester == 2">第二学期</span>
+			</span>
+		</a-table>
+	</div>
 </template>
 <script>
-const EditableCell = {
-  template: `
-      <div class="editable-cell">
-        <div v-if="editable" class="editable-cell-input-wrapper">
-          <a-input :value="value" @change="handleChange" @pressEnter="check" /><a-icon
-            type="check"
-            class="editable-cell-icon-check"
-            @click="check"
-          />
-        </div>
-        <div v-else class="editable-cell-text-wrapper">
-          {{ value || ' ' }}
-          <a-icon type="edit" class="editable-cell-icon" @click="edit" />
-        </div>
-      </div>
-    `,
-  props: {
-    text: String,
-  },
-  data() {
-    return {
-      value: this.text,
-      editable: false,
-    };
-  },
-  methods: {
-    handleChange(e) {
-      const value = e.target.value;
-      this.value = value;
-    },
-    check() {
-      this.editable = false;
-      this.$emit('change', this.value);
-    },
-    edit() {
-      this.editable = true;
-    },
-  },
-};
-export default {
-  components: {
-    EditableCell,
-  },
-  data() {
-    return {
-      dataSource: [
-        {
-          key: '0',
-          name: 'Edward King 0',
-          age: '32',
-          address: 'London, Park Lane no. 0',
-        },
-        {
-          key: '1',
-          name: 'Edward King 1',
-          age: '32',
-          address: 'London, Park Lane no. 1',
-        },
-      ],
-      count: 2,
-      columns: [
-        {
-          title: '姓名',
-          dataIndex: 'name',
-          width: '30%',
-          scopedSlots: { customRender: 'name' },
-        },
-        {
-          title: '年龄',
-          dataIndex: 'age',
-        },
-        {
-          title: '地址',
-          dataIndex: 'address',
-        },
-        {
-          title: '操作',
-          dataIndex: 'operation',
-          scopedSlots: { customRender: 'operation' },
-        },
-      ],
-    };
-  },
-  methods: {
-    onCellChange(key, dataIndex, value) {
-      const dataSource = [...this.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.dataSource = dataSource;
-      }
-    },
-    onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.key !== key);
-    },
-    handleAdd() {
-      const { count, dataSource } = this;
-      const newData = {
-        key: count,
-        name: `Edward King ${count}`,
-        age: 32,
-        address: `London, Park Lane no. ${count}`,
-      };
-      this.dataSource = [...dataSource, newData];
-      this.count = count + 1;
-    },
-  },
-};
+	import request from '@/utils/request.js'
+	const columns = [
+		{
+			title: '课程编号',
+			align:'center',
+			width: 100,
+			dataIndex: 'course.cNo',
+			key: '1'
+		},
+		{
+			title: '课程名称',
+			align:'center',
+			width: 100,
+			dataIndex: 'course.cName',
+			key: '2'
+		},
+
+		{
+			title: '年份',
+			align:'center',
+			width: 100,
+			dataIndex: 'aYears',
+			key: '3'
+		},
+		{
+			title: '学期',
+			align:'center',
+			width: 100,
+			dataIndex: 'aSemester',
+			key: '4',
+			scopedSlots: {
+				customRender: 'aSemester'
+			},
+		},
+		{
+			title: '班级名称',
+			align:'center',
+			width: 100,
+			dataIndex: 'fclass.classname',
+			key: '5'
+		},
+		{
+			title: '授课老师',
+			align:'center',
+			width: 100,
+			dataIndex: 'teacher.tName',
+			key: '6'
+		},
+		{
+			title: '备注',
+			align:'center',
+			width: 100,
+			dataIndex: 'aRemark',
+			key: '7'
+		},
+		{
+			title: '成绩',
+			key: '8',
+			dataIndex:'aScore',
+			fixed: 'right',
+			width: 100,
+			align:'center',
+		},
+	];
+
+	const data = [{
+			aId:1,
+		},
+	];
+
+	export default {
+		inject: ['reload'],
+		data() {
+			return {
+				data,
+				columns,
+				dates:''
+			};
+		},
+		created() {
+			const user = sessionStorage.getItem("user");
+			const users = JSON.parse(user);
+			this.dates = users.account;
+			this.studentexamload()
+		},
+		methods:{
+			studentexamload(){
+				request.post("/api/student/exam/select",this.dates)
+				.then(res =>{
+					this.data = res.data
+				})
+				.catch(error =>{
+					this.$message.error("查询失败！")
+					//this.reload();
+				})
+			},
+			onSearch(value){
+				console.log(value)
+				const result = value;
+				request.get('/api/student/exam/select/search',{
+						params:{
+							account: this.dates,
+							result:result
+						}
+				})
+				.then(res => {
+					this.data = res.data
+				})
+				.catch(error=>{
+					this.$message.error("搜索失败！")
+					this.reload();
+				})
+			},
+			Search(value){
+				console.log(value)
+				if(value == "0"){
+					request.post('/api/student/exam/select', this.dates)
+						.then(res => {
+							console.log(res.data)
+							//this.dataSource.classname = res.data.fclass.classname
+							this.data = res.data
+							//this.reload();  //刷新
+						})
+						.catch(error => {
+							this.$message.error("查询错误！！")
+						})
+				}else{
+					request.get('/api/student/exam/select/one',{
+						params: {
+							e: value ,
+							account: this.dates
+						}
+					})
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.data = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+				}
+			}
+		}
+	};
 </script>
-<style>
-.editable-cell {
-  position: relative;
-}
-
-.editable-cell-input-wrapper,
-.editable-cell-text-wrapper {
-  padding-right: 24px;
-}
-
-.editable-cell-text-wrapper {
-  padding: 5px 24px 5px 5px;
-}
-
-.editable-cell-icon,
-.editable-cell-icon-check {
-  position: absolute;
-  right: 0;
-  width: 20px;
-  cursor: pointer;
-}
-
-.editable-cell-icon {
-  line-height: 18px;
-  display: none;
-}
-
-.editable-cell-icon-check {
-  line-height: 28px;
-}
-
-.editable-cell:hover .editable-cell-icon {
-  display: inline-block;
-}
-
-.editable-cell-icon:hover,
-.editable-cell-icon-check:hover {
-  color: #108ee9;
-}
-
-.editable-add-btn {
-  margin-bottom: 8px;
-}
+<style scoped>
+	.input-search{
+		width: 300px;
+	}
 </style>

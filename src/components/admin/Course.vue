@@ -77,28 +77,21 @@
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
-						<a-form-item label="班级标识">
-							<a-input v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
-								placeholder="请输入班级标识" />
+					<a-form-model :model="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" >
+						<a-form-item ref="cId" prop="cId" label="班级标识">
+							<a-input v-model="upform.cId" placeholder="请输入班级标识" />
 						</a-form-item>
-						<a-form-item label="课程标识">
-							<a-input v-model:value="upform.courseId" v-decorator="['courseId',{ rules: [{ required: true, message: '课程标识不能为空' }] },
-						]" placeholder="请输入课程标识"></a-input>
+						<a-form-item ref="courseId" prop="courseId" label="课程标识">
+							<a-input v-model="upform.courseId" placeholder="请输入课程标识"></a-input>
 						</a-form-item>
-						<a-form-item label="老师标识">
-							<a-input v-model:value="upform.tId" v-decorator="['tId', { rules: [{ required: true, message: '老师标识不能为空'}]}]"
-								placeholder="请输入老师标识" />
+						<a-form-item ref="tId" prop="tId" label="老师标识">
+							<a-input v-model="upform.tId" placeholder="请输入老师标识" />
 						</a-form-item>
-						<a-form-item label="年份">
-							<a-input v-model:value="upform.eYear" v-decorator="['eYear', { rules: [{ required: true, message: '年份不能为空'}]}]"
-								placeholder="请输入年份" />
+						<a-form-item ref="eYear" prop="eYear" label="年份">
+							<a-input v-model="upform.eYear"	placeholder="请输入年份" />
 						</a-form-item>
-						<a-form-item label="学期">
-							<a-select v-model:value="upform.eSemester" v-decorator="[
-							  'eSemester',
-							  { rules: [{ required: true, message: '学期不能为空' }] },
-							]" placeholder="请选择">
+						<a-form-item ref="eSemester" prop="eSemester" label="学期">
+							<a-select v-model="upform.eSemester" placeholder="请选择">
 									<a-select-option value="1">
 										第一学期
 									</a-select-option>
@@ -107,11 +100,8 @@
 									</a-select-option>
 								</a-select>
 						</a-form-item>
-						<a-form-item label="状态">
-							<a-select v-model:value="upform.eFettle" v-decorator="[
-						  'eFettle',
-						  { rules: [{ required: true, message: '状态不能为空' }] },
-						]" placeholder="请选择">
+						<a-form-item ref="eFettle" prop="eFettle" label="状态">
+							<a-select v-model="upform.eFettle" placeholder="请选择">
 								<a-select-option value="0">
 									开课
 								</a-select-option>
@@ -120,11 +110,11 @@
 								</a-select-option>
 							</a-select>
 						</a-form-item>
-						<a-form-item label="备注">
-							<a-input v-model:value="upform.eRemark" v-decorator="['eRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
+						<a-form-item ref="eRemark" prop="eRemark" label="备注">
+							<a-input v-model="upform.eRemark" placeholder="请输入备注" />
 						</a-form-item>
-						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-							<a-button type="primary" html-type="submit">
+						<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
+							<a-button type="primary" @click="editSubmit">
 								提交
 							</a-button>
 						</a-form-item>

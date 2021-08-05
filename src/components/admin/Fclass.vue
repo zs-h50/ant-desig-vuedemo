@@ -5,7 +5,7 @@
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
 					<a-form-item label="班级标识">
-						<a-input v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+						<a-input disabled v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
 							placeholder="请输入班级标识" />
 					</a-form-item>
 					<a-form-item label="班级名称">
@@ -32,7 +32,7 @@
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
 						<a-form-item label="班级标识">
-							<a-input v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+							<a-input disabled v-model:value="upform.cId" v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
 								placeholder="请输入班级标识" />
 						</a-form-item>
 						<a-form-item label="班级名称">

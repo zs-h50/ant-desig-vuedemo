@@ -24,7 +24,7 @@
 						</a-select>
 					</a-form-item>
 					<a-form-item label="电话">
-						<a-input v-decorator="['tPhone', { rules: [{ required: true, message: '电话不能为空'}]}]"
+						<a-input v-decorator="['tPhone', { rules: [{ required: true, message: '电话不能为空'},{min:11,len:11,message: '请输入正确的格式'}]}]"
 							placeholder="请输入电话" />
 					</a-form-item>
 					<a-form-item label="邮箱">
@@ -158,7 +158,7 @@
 						</a-select>
 					</a-form-item>
 					<a-form-item label="电话">
-						<a-input v-model:value="upform.tPhone" v-decorator="['tPhone', { rules: [{ required: true, message: '电话不能为空'}]}]"
+						<a-input v-model:value="upform.tPhone" v-decorator="['tPhone', { rules: [{ required: true, message: '电话不能为空'},{min:11,len:11,message: '请输入正确的格式'}]}]"
 							placeholder="请输入电话" />
 					</a-form-item>
 					<a-form-item label="邮箱">

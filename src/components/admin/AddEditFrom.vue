@@ -1,7 +1,7 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
 		<a-form-item label="姓名">
-			<a-input v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'},{len:5, message: '长度大于5'}]}]" placeholder="请输入学生的姓名" />
+			<a-input v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'}]}]" placeholder="请输入学生的姓名" />
 		</a-form-item>
 		<a-form-item label="学号">
 			<a-input v-decorator="['sNo', { rules: [{ required: false, message: '学生学号不能为空' }] }]" placeholder="请输入学生的学号" />
@@ -113,7 +113,7 @@
 							this.reload();  //刷新
 						})
 						.catch(error =>{
-							this.$message.error("学生添加失败！")
+							this.$message.error("用户已存在，添加失败！")
 							this.form.resetFields();
 							//this.reload();  //刷新
 						})

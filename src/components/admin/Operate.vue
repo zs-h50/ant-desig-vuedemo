@@ -3,20 +3,31 @@
 		<!-- 表格 -->
 		<a-table bordered :data-source="dataSource" :columns="columns" :pagination="paginationOpt" row-key="id">
 			<!-- 编辑 -->
-			<!-- EditableCell组件渲染的地方 -->
-			<template slot="password" slot-scope="text, record">
-				<editable-cell :text="text" @change="onCellChange(record, 'password', $event)" />
-			</template>
-			<template slot="identity" slot-scope="text, record">
-				<editable-cell :text="text" @change="onCellChange(record, 'identity', $event)" />
-			</template>
-
+			<span slot="identity" slot-scope="text, record">
+				<span v-if="record.identity == 1">学生</span>
+				<span v-if="record.identity == 2">老师</span>
+			</span>
 			<!-- 删除按钮 -->
+
+
 			<template slot="operation" slot-scope="text, record">
-				<a-popconfirm v-if="dataSource.length" title="是否要删除?" ok-text="确定" cancel-text="取消"
-					@confirm="() => onDelete(record.id)">
-					<a-button disabled type="danger">删除</a-button>
-				</a-popconfirm>
+				<a-button @click="showModal">编辑</a-button>
+				<a-modal title="修改" :visible="visible" @ok="handleOk" @cancel="handleCancel">
+					<a-form-model :model="form" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
+						<a-form-model-item  label="用户账号">
+							<a-input disabled v-model="form.account" />
+						</a-form-model-item>
+						
+						<a-form-model-item label="密码">
+							<a-input v-model="form.password" />
+						</a-form-model-item>
+						
+						<a-form-model-item label="身份" prop>
+							<a-input v-model="form.identity" />
+						</a-form-model-item>
+					</a-form-model>
+				</a-modal>
+
 			</template>
 		</a-table>
 	</div>
@@ -70,26 +81,12 @@
 			},
 		},
 	]
-
+	
 	export default {
 		inject: ['reload'], //provide/inject可以轻松实现跨级访问父组件的数据
 		data() {
 			return {
-				dataSource: [{
-						key: '1',
-						id: "1",
-						account: 'Edward King 0',
-						password: '32',
-						identity: 'London, Park Lane no. 0',
-					},
-					{
-						key: '2',
-						id: "2",
-						account: 'Edward King 1',
-						password: '32',
-						identity: 'London, Park Lane no. 1',
-					},
-				],
+				dataSource: [],
 				paginationOpt: {
 					defaultCurrent: 1, // 默认当前页数
 					defaultPageSize: 8, // 默认当前页显示数据的大小
@@ -102,13 +99,27 @@
 				visible: false,
 				formLayout: 'horizontal', //表单布局
 				form: this.$form.createForm(this),
-
+				form:{
+					account:'',
+					password:'',
+					identity:''
+				},
+				rules: {
+					
+				}
 			};
 		},
 		created() {
 			this.load()
 		},
 		methods: {
+			showModal() {
+				this.visible = true;
+			},
+			handleCancel(e) {
+				console.log('关闭');
+				this.visible = false;
+			},
 			//获取数据
 			load() {
 				request.post('/api/admin/operate')
@@ -127,7 +138,6 @@
 				const id = record.id;
 				const dataSource = [...this.dataSource];
 				const target = dataSource.find(item => item.id === id);
-				//console.log(target) 
 				if (target) {
 					target[dataIndex] = value;
 					console.log(value)
@@ -137,7 +147,7 @@
 					console.log(dataSource)
 					this.dataSource = dataSource;
 				}
-				if(record != null){
+				if (record != null) {
 					const user = JSON.parse(JSON.stringify(record))
 					request.put("/api/admin/operate/update", user)
 						.then(res => {
@@ -148,37 +158,12 @@
 							this.$message.error('修改用户失败！！！');
 							this.reload();
 						})
-				}else{
+				} else {
 					this.$message.error('不能为空！！！');
 				}
-				
-			},
-			// 删除
-			onDelete(id) {
-				console.log(id)
-				request.delete("/api/admin/operate/delete/" + id)
-					.then(res => {
-						this.$message.success('删除用户成功！！！');
-						this.reload();
-					})
-					.catch(error => {
-						this.$message.error('删除用户失败！！！');
-						this.reload();
-					})
-			},
-			// 是否弹窗
-			showModal() {
-				this.visible = true;
-			},
-			// 关闭对话框
-			handleCancel(e) {
-				this.visible = false;
 			},
 		},
-		components: {
-			EditableCell,
-		},
-	};
+	}
 </script>
 <style>
 	.editable-add-btn {

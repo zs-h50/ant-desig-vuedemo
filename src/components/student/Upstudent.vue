@@ -1,14 +1,14 @@
 <template>
-	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-		<a-form-item label="密码">
-			<a-input v-decorator="['password', { rules: [{ required: true, message: '输入密码' }] }]"  placeholder="输入密码" />
-		</a-form-item>
-		<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
-			<a-button type="primary" html-type="submit">
-				修改
-			</a-button>
-		</a-form-item>
-	</a-form>
+		<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+			<a-form-item label="密码">
+				<a-input v-decorator="['password', { rules: [{ required: true, message: '输入密码' }] }]"  placeholder="输入密码" />
+			</a-form-item>
+			<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
+				<a-button type="primary" html-type="submit">
+					修改
+				</a-button>
+			</a-form-item>
+		</a-form>
 </template>
 
 <script>
@@ -34,7 +34,7 @@
 				this.form.validateFields((err, values) => {
 					if (!err) {
 						console.log(values);
-						request.get('/api/teacher/updats',{
+						request.get('/api/student/updats',{
 							params:{
 								account:account,
 								password:values.password

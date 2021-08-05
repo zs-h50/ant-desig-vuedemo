@@ -278,7 +278,6 @@
 				form: this.$form.createForm(this),
 				dataSource,
 				columns,
-				visible: false,
 				visibles: false,
 				paginationOpt: {
 					defaultCurrent: 1, // 默认当前页数
@@ -315,15 +314,9 @@
 			this.teacherload()
 		},
 		methods:{
-			showModal(){
-				this.visible = true
-			},
 			enditModal(record){
 				this.upform = JSON.parse(JSON.stringify(record))
 				this.visibles = true
-			},
-			handleCancel(e) {
-				this.visible = false;
 			},
 			handleCancels(e) {
 				this.visibles = false;

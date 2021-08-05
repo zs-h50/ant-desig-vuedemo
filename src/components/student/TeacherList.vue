@@ -1,176 +1,230 @@
 <template>
-  <div>
-    <a-button class="editable-add-btn" @click="handleAdd">
-      增加
-    </a-button>
-    <a-table bordered :data-source="dataSource" :columns="columns">
-      <template slot="name" slot-scope="text, record">
-        <editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)" />
-      </template>
-      <template slot="operation" slot-scope="text, record">
-        <a-popconfirm
-          v-if="dataSource.length"
-          title="是否要删除?"
-          @confirm="() => onDelete(record.key)"
-        >
-          <a href="javascript:;">删除</a>
-        </a-popconfirm>
-      </template>
-    </a-table>
-  </div>
+	<div>
+		<a-input-group compact>
+			<a-select style="float: right;" @change="onSearch" default-value="0">
+				<a-select-option value="0">
+					全部学期
+				</a-select-option>
+				<a-select-option value="1">
+					第一学期
+				</a-select-option>
+				<a-select-option value="2">
+					第二学期
+				</a-select-option>
+			</a-select>
+			<a-select :data-source="temp" @change="twoSearch" default-value="0" style="float: right;">
+				<a-select-option value="2">
+					全部
+				</a-select-option>
+				<a-select-option value="0">
+					开课
+				</a-select-option>
+				<a-select-option value="1">
+					结课
+				</a-select-option>
+			</a-select>
+		</a-input-group>
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1050, y: 385 }" :pagination="paginationOpt"
+			row-key="eId">
+			<span slot="Fettle" slot-scope="text,record">
+				<span v-if="record.eFettle == 0" >开课</span>
+				<span v-if="record.eFettle == 1" >结课</span>
+			</span>
+			<span slot="eSemester" slot-scope="text,record">
+				<span v-if="record.eSemester == 1">第一学期</span>
+				<span v-if="record.eSemester == 2">第二学期</span>
+			</span>
+		</a-table>
+	</div>
+
 </template>
 <script>
-const EditableCell = {
-  template: `
-      <div class="editable-cell">
-        <div v-if="editable" class="editable-cell-input-wrapper">
-          <a-input :value="value" @change="handleChange" @pressEnter="check" /><a-icon
-            type="check"
-            class="editable-cell-icon-check"
-            @click="check"
-          />
-        </div>
-        <div v-else class="editable-cell-text-wrapper">
-          {{ value || ' ' }}
-          <a-icon type="edit" class="editable-cell-icon" @click="edit" />
-        </div>
-      </div>
-    `,
-  props: {
-    text: String,
-  },
-  data() {
-    return {
-      value: this.text,
-      editable: false,
-    };
-  },
-  methods: {
-    handleChange(e) {
-      const value = e.target.value;
-      this.value = value;
-    },
-    check() {
-      this.editable = false;
-      this.$emit('change', this.value);
-    },
-    edit() {
-      this.editable = true;
-    },
-  },
-};
-export default {
-  components: {
-    EditableCell,
-  },
-  data() {
-    return {
-      dataSource: [
-        {
-          key: '0',
-          name: 'Edward King 0',
-          age: '32',
-          address: 'London, Park Lane no. 0',
-        },
-        {
-          key: '1',
-          name: 'Edward King 1',
-          age: '32',
-          address: 'London, Park Lane no. 1',
-        },
-      ],
-      count: 2,
-      columns: [
-        {
-          title: '姓名',
-          dataIndex: 'name',
-          width: '30%',
-          scopedSlots: { customRender: 'name' },
-        },
-        {
-          title: '年龄',
-          dataIndex: 'age',
-        },
-        {
-          title: '地址',
-          dataIndex: 'address',
-        },
-        {
-          title: '操作',
-          dataIndex: 'operation',
-          scopedSlots: { customRender: 'operation' },
-        },
-      ],
-    };
-  },
-  methods: {
-    onCellChange(key, dataIndex, value) {
-      const dataSource = [...this.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.dataSource = dataSource;
-      }
-    },
-    onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.key !== key);
-    },
-    handleAdd() {
-      const { count, dataSource } = this;
-      const newData = {
-        key: count,
-        name: `Edward King ${count}`,
-        age: 32,
-        address: `London, Park Lane no. ${count}`,
-      };
-      this.dataSource = [...dataSource, newData];
-      this.count = count + 1;
-    },
-  },
-};
+	import request from '@/utils/request.js'
+	const columns = [{
+			title: 'ID',
+			width: 100,
+			align: 'center',
+			dataIndex: 'eId',
+			key: 'eId',
+			fixed: 'left'
+		},
+		{
+			title: '课程编号',
+			width: 100,
+			align: 'center',
+			dataIndex: 'course.cNo',
+			key: 'course.cNo',
+			fixed: 'left'
+		},
+		{
+			title: '课程名称',
+			width: 100,
+			align: 'center',
+			dataIndex: 'course.cName',
+			key: 'course.cName',
+		},
+		{
+			title: '授课老师',
+			width: 100,
+			align: 'center',
+			dataIndex: 'teacher.tName',
+			key: 'teacher.tName',
+		},
+		{
+			title: '年份',
+			dataIndex: 'eYear',
+			key: '1',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级名称',
+			dataIndex: 'fclass.classname',
+			key: '2',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级人数',
+			dataIndex: 'fclass.cNumber',
+			key: '3',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '学期',
+			dataIndex: 'eSemester',
+			key: '4',
+			width: 150,
+			align: 'center',
+			scopedSlots: {
+				customRender: 'eSemester'
+			}
+		},
+		{
+			title: '状态',
+			dataIndex: 'eFettle',
+			key: '5',
+			width: 150,
+			align: 'center',
+			scopedSlots: {
+				customRender: 'Fettle'
+			}
+		},
+		{
+			title: '备注',
+			dataIndex: 'eRemark',
+			key: '6',
+			width: 150,
+			align: 'center',
+		},
+	];
+
+	const dataSource = [{
+		eId: '1',
+	}, ];
+
+	export default {
+		inject: ['reload'],
+		data() {
+			return {
+				formLayout: 'horizontal',
+				form: this.$form.createForm(this),
+				dataSource,
+				columns,
+				paginationOpt: {
+					defaultCurrent: 1, // 默认当前页数
+					defaultPageSize: 8, // 默认当前页显示数据的大小
+					total: 0, // 总数，必须先有
+					showQuickJumper: true,
+					showTotal: (total) => `共 ${total} 条`, // 显示总数
+				},
+				dates:'',
+				temp:[],
+			};
+		},
+		created() {
+			const user = sessionStorage.getItem("user");
+			const users = JSON.parse(user);
+			this.dates = users.account;
+			this.courseload()
+		},
+		methods: {
+			courseload() {
+				request.post('/api/student/course/select', this.dates)
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+						//this.reload();  //刷新
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+			},
+			onSearch(value) {
+				console.log(value)
+				if(value == "0"){
+					request.post('/api/student/course/select', this.dates)
+						.then(res => {
+							console.log(res.data)
+							this.dataSource = res.data
+							//this.reload();  //刷新
+						})
+						.catch(error => {
+							this.$message.error("查询错误！！")
+						})
+				}else{
+					request.get('/api/student/course/select/one',{
+						params: {
+							e: value,
+							account: this.dates
+						}
+					})
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+				}
+			},
+			twoSearch(value){
+				console.log(value)
+				if(value == "2"){
+					request.post('/api/student/course/select', this.dates)
+						.then(res => {
+							console.log(res.data)
+							this.dataSource = res.data
+							//this.reload();  //刷新
+						})
+						.catch(error => {
+							this.$message.error("查询错误！！")
+						})
+				}else{
+					request.get('/api/student/course/select/two',{
+						params: {
+							e: value ,
+							account: this.dates
+						}
+					})
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+				}
+			},
+		},
+	};
 </script>
-<style>
-.editable-cell {
-  position: relative;
-}
-
-.editable-cell-input-wrapper,
-.editable-cell-text-wrapper {
-  padding-right: 24px;
-}
-
-.editable-cell-text-wrapper {
-  padding: 5px 24px 5px 5px;
-}
-
-.editable-cell-icon,
-.editable-cell-icon-check {
-  position: absolute;
-  right: 0;
-  width: 20px;
-  cursor: pointer;
-}
-
-.editable-cell-icon {
-  line-height: 18px;
-  display: none;
-}
-
-.editable-cell-icon-check {
-  line-height: 28px;
-}
-
-.editable-cell:hover .editable-cell-icon {
-  display: inline-block;
-}
-
-.editable-cell-icon:hover,
-.editable-cell-icon-check:hover {
-  color: #108ee9;
-}
-
-.editable-add-btn {
-  margin-bottom: 8px;
-}
+<style scoped>
+	.ainput {
+		float: right;
+	}
 </style>

@@ -5,7 +5,6 @@ import Indexs from '../views/student/indexs.vue'
 import UserList from '../components/student/UserList.vue'
 import Welcome from '../components/Welcome.vue'
 import ScoreList from '../components/student/ScoreList.vue'
-import TeamList from '../components/student/TeamList.vue'
 import TeacherList from '../components/student/TeacherList.vue'
 import Index from '../views/teacher/index.vue'
 import Retrieve from '../views/Retrieve.vue'
@@ -21,6 +20,7 @@ import Courses from '../components/admin/Course.vue'
 import Exam from '../components/admin/Exam.vue'
 import Fclass from '../components/admin/Fclass.vue'
 import Updataps from '../components/teacher/Updataps.vue'
+import Upstudent from '../components/student/Upstudent.vue'
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -46,10 +46,10 @@ const routes = [
     component: Indexs,
 	children:[	//子路由,嵌套路由
 		{path:'welcome',name: '欢迎页面',component: Welcome},
-		{path:'userlist',name: '操作1',component: UserList},
-		{path:'scorelist',name: '操作2',component: ScoreList},
-		{path:'teamlist',name: '操作3',component: TeamList},
-		{path:'teacherlist',name: '操作4',component: TeacherList},
+		{path:'studentlist',name: '个人信息',component: UserList},
+		{path:'scorelist',name: '成绩信息',component: ScoreList},
+		{path:'teacherlist',name: '课程信息',component: TeacherList},
+		{path:'upstudent',name:'修改密码',component:Upstudent}
 	]
   },
   {

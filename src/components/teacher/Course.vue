@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<a-input-group compact>
-			<a-select :data-source="data" @change="onSearch" default-value="0">
+			<a-select @change="onSearch" default-value="0">
 				<a-select-option value="0">
 					全部学期
 				</a-select-option>
@@ -12,23 +12,23 @@
 					第二学期
 				</a-select-option>
 			</a-select>
-			<a-select :data-source="data" @change="onSearch" default-value="0" style="float: right;">
+			<a-select :data-source="temp" @change="twoSearch" default-value="0" style="float: right;">
+				<a-select-option value="2">
+					全部
+				</a-select-option>
 				<a-select-option value="0">
-					全部学期
+					开课
 				</a-select-option>
 				<a-select-option value="1">
-					第一学期
-				</a-select-option>
-				<a-select-option value="2">
-					第二学期
+					结课
 				</a-select-option>
 			</a-select>
 		</a-input-group>
 		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1050, y: 385 }" :pagination="paginationOpt"
 			row-key="eId">
 			<span slot="Fettle" slot-scope="text,record">
-				<span v-if="record.eFettle == 0">开课</span>
-				<span v-if="record.eFettle == 1">结课</span>
+				<span v-if="record.eFettle == 0" >开课</span>
+				<span v-if="record.eFettle == 1" >结课</span>
 			</span>
 			<span slot="eSemester" slot-scope="text,record">
 				<span v-if="record.eSemester == 1">第一学期</span>
@@ -132,7 +132,8 @@
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
 				},
-				data: [],
+				dates:'',
+				temp:[],
 			};
 		},
 		created() {
@@ -156,6 +157,63 @@
 			},
 			onSearch(value) {
 				console.log(value)
+				if(value == "0"){
+					request.post('/api/teacher/course/select', this.dates)
+						.then(res => {
+							console.log(res.data)
+							//this.dataSource.classname = res.data.fclass.classname
+							this.dataSource = res.data
+							//this.reload();  //刷新
+						})
+						.catch(error => {
+							this.$message.error("查询错误！！")
+						})
+				}else{
+					request.get('/api/teacher/course/select/one',{
+						params: {
+							e: value ,
+							account: this.dates
+						}
+					})
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+				}
+			},
+			twoSearch(value){
+				console.log(value)
+				if(value == "2"){
+					request.post('/api/teacher/course/select', this.dates)
+						.then(res => {
+							console.log(res.data)
+							//this.dataSource.classname = res.data.fclass.classname
+							this.dataSource = res.data
+							//this.reload();  //刷新
+						})
+						.catch(error => {
+							this.$message.error("查询错误！！")
+						})
+				}else{
+					request.get('/api/teacher/course/select/two',{
+						params: {
+							e: value ,
+							account: this.dates
+						}
+					})
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+				}
 			},
 		},
 	};
