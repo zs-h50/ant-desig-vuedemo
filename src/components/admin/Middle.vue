@@ -3,7 +3,7 @@
 		<a-layout-sider>
 			<!-- 左边的导航栏 -->
 			<!-- :default-selected-keys="['2']" 默认选择导航栏的选项 -->
-			<a-menu style="width: 256px;height:81vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
+			<a-menu style="width: 256px;height:100vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
 				mode="inline" @click="handleClick" theme="dark">
 				<!-- 第一个菜单选项 -->
 				<a-sub-menu key="sub1" @titleClick="titleClick">
@@ -25,7 +25,7 @@
 						<a-icon type="unordered-list" /><span>学校管理</span>
 					</span>
 					<a-sub-menu key="sub3">
-						<span  slot="title">
+						<span slot="title">
 							<a-icon type="caret-down" theme="filled" /><span>学生管理</span>
 						</span>
 						<a-menu-item key="2">
@@ -34,27 +34,28 @@
 						<a-menu-item key="3">
 							<router-link to="house">家庭信息</router-link>
 						</a-menu-item>
-						<a-menu-item key="4">
-							<router-link to="courses">课程信息</router-link>
-						</a-menu-item>
-						<a-menu-item key="5">
-							<router-link to="exam">成绩信息</router-link>
-						</a-menu-item>
+
 					</a-sub-menu>
 					<a-sub-menu key="sub4">
-						<span  slot="title">
+						<span slot="title">
 							<a-icon type="caret-down" theme="filled" /><span>老师管理</span>
 						</span>
-						<a-menu-item key="6">
+						<a-menu-item key="4">
 							<router-link to="teacher">个人信息</router-link>
+						</a-menu-item>
+						<a-menu-item key="5">
+							<router-link to="courses">课程信息</router-link>
 						</a-menu-item>
 					</a-sub-menu>
 					<a-sub-menu key="sub5">
-						<span  slot="title">
+						<span slot="title">
 							<a-icon type="caret-down" theme="filled" /><span>班级管理</span>
 						</span>
-						<a-menu-item key="7">
+						<a-menu-item key="6">
 							<router-link to="fclass">班级信息</router-link>
+						</a-menu-item>
+						<a-menu-item key="7">
+							<router-link to="exam">成绩信息</router-link>
 						</a-menu-item>
 					</a-sub-menu>
 				</a-sub-menu>
@@ -78,7 +79,7 @@
 	import Course from './Course.vue'
 	import Exam from './Exam.vue'
 	import Fclass from './Fclass.vue'
- 	export default {
+	export default {
 		inject: ['reload'],
 		data() {
 			return {

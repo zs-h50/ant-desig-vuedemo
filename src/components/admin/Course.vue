@@ -1,10 +1,8 @@
 <template>
-	
 	<div>
-		<a-button size="small" @click="showModal()" type="primary"
-			icon="plus-square">
+		<a-button size="large" @click="showModal()" type="primary" icon="plus-square">
 			授课
-			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
+			<a-modal title="分配" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
 					<a-form-item label="班级标识">
@@ -28,13 +26,13 @@
 						  'eSemester',
 						  { rules: [{ required: true, message: '学期不能为空' }] },
 						]" placeholder="请选择">
-								<a-select-option value="1">
-									第一学期
-								</a-select-option>
-								<a-select-option value="2">
-									第二学期
-								</a-select-option>
-							</a-select>
+							<a-select-option value="1">
+								第一学期
+							</a-select-option>
+							<a-select-option value="2">
+								第二学期
+							</a-select-option>
+						</a-select>
 					</a-form-item>
 					<a-form-item label="状态">
 						<a-select v-decorator="[
@@ -60,10 +58,10 @@
 				</a-form>
 			</a-modal>
 		</a-button>
-		
+
 		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1350, y: 385 }" :pagination="paginationOpt"
 			row-key="eId">
-			
+
 			<span slot="Fettle" slot-scope="text,record">
 				<span v-if="record.eFettle == 0">开课</span>
 				<span v-if="record.eFettle == 1">结课</span>
@@ -72,12 +70,12 @@
 				<span v-if="record.eSemester == 1">第一学期</span>
 				<span v-if="record.eSemester == 2">第二学期</span>
 			</span>
-			
-			
+
+
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
-					<a-form-model :model="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" >
+					<a-form-model :model="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
 						<a-form-item ref="cId" prop="cId" label="班级标识">
 							<a-input v-model="upform.cId" placeholder="请输入班级标识" />
 						</a-form-item>
@@ -88,17 +86,17 @@
 							<a-input v-model="upform.tId" placeholder="请输入老师标识" />
 						</a-form-item>
 						<a-form-item ref="eYear" prop="eYear" label="年份">
-							<a-input v-model="upform.eYear"	placeholder="请输入年份" />
+							<a-input v-model="upform.eYear" placeholder="请输入年份" />
 						</a-form-item>
 						<a-form-item ref="eSemester" prop="eSemester" label="学期">
 							<a-select v-model="upform.eSemester" placeholder="请选择">
-									<a-select-option value="1">
-										第一学期
-									</a-select-option>
-									<a-select-option value="2">
-										第二学期
-									</a-select-option>
-								</a-select>
+								<a-select-option value="1">
+									第一学期
+								</a-select-option>
+								<a-select-option value="2">
+									第二学期
+								</a-select-option>
+							</a-select>
 						</a-form-item>
 						<a-form-item ref="eFettle" prop="eFettle" label="状态">
 							<a-select v-model="upform.eFettle" placeholder="请选择">
@@ -125,7 +123,7 @@
 				@click="delstu(record.eId)">删除</a-button>
 		</a-table>
 	</div>
-	
+
 </template>
 <script>
 	import request from '@/utils/request.js'
@@ -186,8 +184,8 @@
 			key: '4',
 			width: 150,
 			align: 'center',
-			scopedSlots:{
-				customRender:'eSemester'
+			scopedSlots: {
+				customRender: 'eSemester'
 			}
 		},
 		{
@@ -196,8 +194,8 @@
 			key: '5',
 			width: 150,
 			align: 'center',
-			scopedSlots:{
-				customRender:'Fettle'
+			scopedSlots: {
+				customRender: 'Fettle'
 			}
 		},
 		{

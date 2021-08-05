@@ -8,26 +8,28 @@
 				<span v-if="record.identity == 2">老师</span>
 			</span>
 			<!-- 删除按钮 -->
-
-
-			<template slot="operation" slot-scope="text, record">
-				<a-button @click="showModal">编辑</a-button>
+			<template slot="operation" slot-scope="text,record">
+				<a-button @click="showModal(record)">编辑</a-button>
 				<a-modal title="修改" :visible="visible" @ok="handleOk" @cancel="handleCancel">
-					<a-form-model :model="form" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }">
-						<a-form-model-item  label="用户账号">
-							<a-input disabled v-model="form.account" />
+					<a-form-model :model="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }"
+						:wrapper-col="{ span: 12 }">
+						<a-form-model-item label="用户账号" ref="account" prop="account">
+							<a-input disabled v-model="upform.account" />
 						</a-form-model-item>
-						
-						<a-form-model-item label="密码">
-							<a-input v-model="form.password" />
+
+						<a-form-model-item label="密码" ref="password" prop="password">
+							<a-input v-model="upform.password" placeholder="请输入修改的密码" />
 						</a-form-model-item>
-						
-						<a-form-model-item label="身份" prop>
-							<a-input v-model="form.identity" />
+
+						<a-form-model-item label="身份" ref="identity" prop="identity">
+							<a-select v-model="form.identity" placeholder="选择用户的身份">
+								<a-select-option v-for="(item,index) in Data" :value='item.id' :key="item.id">
+									{{item.name}}
+								</a-select-option>
+							</a-select>
 						</a-form-model-item>
 					</a-form-model>
 				</a-modal>
-
 			</template>
 		</a-table>
 	</div>
@@ -81,7 +83,7 @@
 			},
 		},
 	]
-	
+
 	export default {
 		inject: ['reload'], //provide/inject可以轻松实现跨级访问父组件的数据
 		data() {
@@ -99,13 +101,23 @@
 				visible: false,
 				formLayout: 'horizontal', //表单布局
 				form: this.$form.createForm(this),
-				form:{
-					account:'',
-					password:'',
-					identity:''
+				upform: {
+					account: '',
+					password: '',
+					identity: ''
 				},
+				Data: [{
+					id: 1,
+					name: '学生'
+				}, {
+					id: 2,
+					name: '老师'
+				}, {
+					id: 3,
+					name: '禁用'
+				}],
 				rules: {
-					
+
 				}
 			};
 		},
@@ -113,7 +125,9 @@
 			this.load()
 		},
 		methods: {
-			showModal() {
+			showModal(record) {
+				this.upform = JSON.parse(JSON.stringify(record))
+				console.log(this.upform)
 				this.visible = true;
 			},
 			handleCancel(e) {
@@ -131,7 +145,18 @@
 						console.log(error)
 					})
 			},
-
+			handleOk(e) {
+				const user = JSON.parse(JSON.stringify(record))
+				request.put("/api/admin/operate/update", user)
+					.then(res => {
+						this.$message.success('修改用户成功！！！');
+						// this.reload();
+					})
+					.catch(res => {
+						this.$message.error('修改用户失败！！！');
+						this.reload();
+					})
+			},
 			// 编辑
 			onCellChange(record, dataIndex, value) {
 				console.log(value)
@@ -165,7 +190,7 @@
 		},
 	}
 </script>
-<style>
+<style scoped>
 	.editable-add-btn {
 		margin-bottom: 8px;
 	}

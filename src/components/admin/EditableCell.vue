@@ -1,7 +1,7 @@
 <template>
 	<div class="editable-cell">
 		<div v-if="editable" class="editable-cell-input-wrapper">
-			<a-input :value="value" @change="handleChange" @pressEnter="check"/>
+			<a-input :value="value" @change="handleChange" @pressEnter="check" />
 			<a-icon type="check" class="editable-cell-icon-check" @click="check" />
 		</div>
 		<!-- 先点击编辑的图标，触发edit事件，进入打开输入框架 -->
@@ -13,7 +13,6 @@
 </template>
 
 <script>
-	
 	import request from '@/utils/request.js'
 	export default {
 		props: {
@@ -29,14 +28,14 @@
 			handleChange(e) {
 				const value = e.target.value;
 				this.value = value;
-				
+
 			},
 			check() {
 				this.editable = false;
-				if(this.value != null){
-					this.$emit('change', this.value);   //子向父传递
+				if (this.value != null) {
+					this.$emit('change', this.value); //子向父传递
 				}
-				
+
 			},
 			edit() {
 				this.editable = true;
@@ -45,7 +44,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.editable-cell {
 		position: relative;
 	}

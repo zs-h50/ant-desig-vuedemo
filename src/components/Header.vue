@@ -1,10 +1,13 @@
 <template>
 	    <a-layout-header class="header">
 	      <div class="logo" />
+		  
 		  <a-dropdown>
 		      <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+			  <a-avatar style="backgroundColor:#87d068;" icon="user"/>
 				{{username.account}} 
 		      </a>
+			  
 		      <a-menu slot="overlay">
 		        <a-menu-item>
 		          <a href="/login" @click="removeid()">退出登录</a>

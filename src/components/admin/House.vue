@@ -1,18 +1,16 @@
 <template>
-	
 	<div>
-		<a-button size="small" @click="showModal()" type="primary"
-			icon="plus-square">
+		<a-button size="small" @click="showModal()" type="primary" icon="plus-square">
 			新增
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<Houseform />
 			</a-modal>
 		</a-button>
-		
+
 		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1550, y: 385 }" :pagination="paginationOpt"
 			row-key="hId">
-			
+
 			<span slot="genre" slot-scope="text,record">
 				<span v-if="record.genre ==0">哥哥</span>
 				<span v-if="record.genre ==1">姐姐</span>
@@ -30,20 +28,19 @@
 				<span v-if="record.hFettle ==1">单亲家庭</span>
 				<span v-if="record.hFettle ==2">正常</span>
 			</span>
-			
-			
-		
-			
+
+
+
+
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit()">
-						<a-form-item label="学生标识">
-							<a-input v-model:value="upform.sId" v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
-								placeholder="请输入学生标识" />
+					<a-form-model :form="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }"
+						:wrapper-col="{ span: 12 }">
+						<a-form-item ref="sId" prop="sId" label="学生标识">
+							<a-input v-model="upform.sId" placeholder="请输入学生标识" />
 						</a-form-item>
-						<a-form-item label="与学生关系">
-							<a-select v-model:value="upform.genre" v-decorator="['genre',{ rules: [{ required: true, message: '成员类型不能为空' }] },
-						]" placeholder="请选择">
+						<a-form-item ref="genre" prop="genre" label="与学生关系">
+							<a-select v-model="upform.genre" placeholder="请选择">
 								<a-select-option value="0">
 									哥哥
 								</a-select-option>
@@ -64,12 +61,11 @@
 								</a-select-option>
 							</a-select>
 						</a-form-item>
-						<a-form-item label="姓名">
-							<a-input v-model:value="upform.hName" v-decorator="['hName', { rules: [{ required: true, message: '成员姓名不能为空'}]}]"
-								placeholder="请输入成员姓名" />
+						<a-form-item ref="hName" prop="hName" label="姓名">
+							<a-input v-model="upform.hName" placeholder="请输入成员姓名" />
 						</a-form-item>
-						<a-form-item label="性别">
-							<a-select v-model:value="upform.hGender" v-decorator="['hGender',{ rules: [{ required: true, message: '性别不能为空' }] },]" placeholder="选择性别">
+						<a-form-item ref="hGender" prop="hGender" label="性别">
+							<a-select v-model="upform.hGender" placeholder="选择性别">
 								<a-select-option value="1">
 									男
 								</a-select-option>
@@ -78,22 +74,17 @@
 								</a-select-option>
 							</a-select>
 						</a-form-item>
-						<a-form-item label="电话">
-							<a-input v-model:value="upform.hPhone" v-decorator="['hPhone', { rules: [{ required: true, message: '电话不能为空'}]}]"
-								placeholder="请输入电话" />
+						<a-form-item ref="hPhone" prop="hPhone" label="电话">
+							<a-input v-model="upform.hPhone" placeholder="请输入电话" />
 						</a-form-item>
-						<a-form-item label="出生日期" style="margin-bottom:0;">
-						    <a-date-picker v-model:value="upform.hBirthday" v-decorator="['hBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]" style="width: 100%" />
+						<a-form-item ref="hBirthday" prop="hBirthday" label="出生日期" style="margin-bottom:0;">
+							<a-date-picker v-model="upform.hBirthday" style="width: 100%" />
 						</a-form-item>
-						<a-form-item label="身份证号码">
-							<a-input v-model:value="upform.hCard" v-decorator="['hCard', { rules: [{ required: true, message: '身份证号码不能为空'}]}]"
-								placeholder="请输入身份证号码" />
+						<a-form-item ref="hCard" prop="hCard" label="身份证号码">
+							<a-input v-model="upform.hCard" placeholder="请输入身份证号码" />
 						</a-form-item>
-						<a-form-item label="状态">
-							<a-select v-model:value="upform.hFettle" v-decorator="[
-						  'hFettle',
-						  { rules: [{ required: true, message: '家庭状态不能为空' }] },
-						]" placeholder="请选择">
+						<a-form-item ref="hFettle" prop="hFettle" label="状态">
+							<a-select v-model="upform.hFettle" placeholder="请选择">
 								<a-select-option value="0">
 									烈士家庭
 								</a-select-option>
@@ -105,12 +96,11 @@
 								</a-select-option>
 							</a-select>
 						</a-form-item>
-						<a-form-item label="备注">
-							<a-input v-model:value="upform.hRemark" v-decorator="['hRemark', { rules: [{ required: false}]}]"
-								placeholder="请输入备注" />
+						<a-form-item ref="hRemark" prop="hRemark" label="备注">
+							<a-input v-model:value="upform.hRemark" placeholder="请输入备注" />
 						</a-form-item>
 						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-							<a-button type="primary" html-type="submit">
+							<a-button type="primary" @click="editSubmit()">
 								提交
 							</a-button>
 						</a-form-item>
@@ -121,7 +111,7 @@
 				@click="delstu(record.hId)">删除</a-button>
 		</a-table>
 	</div>
-	
+
 </template>
 <script>
 	import request from '@/utils/request.js'
@@ -262,7 +252,69 @@
 					hFettle: '',
 					hRemark: ''
 				},
-			};
+				rules: {
+					sId: [{
+						required: true,
+						message: '请输入修改的学生',
+						trigger: 'blur'
+					}, ],
+					genre: [{
+						required: true,
+						message: '请输入修改的成员类型',
+						trigger: 'blur'
+					}, ],
+					hName: [{
+						required: true,
+						message: '请输入修改的成员姓名',
+						trigger: 'blur'
+					}, ],
+					hGender: [{
+						required: true,
+						message: '请输入修改的成员性别',
+						trigger: 'blur'
+					}, ],
+					hPhone: [{
+							required: true,
+							message: '请输入修改的成员电话号码',
+							trigger: 'blur'
+						},
+						{
+							min: 11,
+							max: 11,
+							message: '请输入正确11位的号码格式',
+							trigger: 'blur'
+						}
+					],
+					hBirthday: [{
+						required: true,
+						message: '请输入修改的成员出生日期',
+						trigger: 'blur'
+					}, ],
+					hCard: [{
+							required: true,
+							message: '请输入修改的成员身份证',
+							trigger: 'blur'
+						},
+						{
+							min: 18,
+							max: 18,
+							message: '请输入18位的身份证号码',
+							trigger: 'blur'
+						}
+					],
+					hFettle: [{
+						required: true,
+						message: '请输入修改的家庭状态',
+						trigger: 'blur'
+					}, ],
+					hRemark: [{
+						required: true,
+						message: '请输入修改的备注',
+						trigger: 'blur'
+					}, ],
+				}
+			}
+
 		},
 		created() {
 			this.houseload()
@@ -293,16 +345,23 @@
 						this.$message.error("查询错误！！")
 					})
 			},
-			editSubmit(){
-				request.post('/api/admin/house/updata',this.upform)
-				.then(res =>{
-					this.$message.success("修改成功!!")
-					this.reload(); //刷新
-				})
-				.catch(error =>{
-					this.$message.error("修改失败!!")
-					this.reload();  //刷新
-				})
+			editSubmit() {
+				this.$refs.ruleForm.validate(valid => {
+					if (valid) {
+						request.post('/api/admin/house/updata', this.upform)
+							.then(res => {
+								this.$message.success("修改成功!!")
+								this.reload(); //刷新
+							})
+							.catch(error => {
+								this.$message.error("修改失败!!")
+								this.reload(); //刷新
+							})
+					} else {
+						console.log('error submit!!');
+						return false;
+					}
+				});
 			},
 			// 删除
 			delstu(id) {
@@ -315,7 +374,7 @@
 					})
 					.catch(error => {
 						this.$message.error("删除失败!!")
-						this.reload();  //刷新
+						this.reload(); //刷新
 					})
 			},
 		},

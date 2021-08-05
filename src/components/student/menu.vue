@@ -3,7 +3,7 @@
 		<a-layout-sider>
 			<!-- 左边的导航栏 -->
 			<!-- :default-selected-keys="['2']" 默认选择导航栏的选项 -->
-			<a-menu style="width: 256px;height:81vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
+			<a-menu style="width: 256px;height:100vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
 				mode="inline" @click="handleClick" theme="dark">
 				<a-sub-menu key="sub1" @titleClick="titleClick">
 					<span slot="title">

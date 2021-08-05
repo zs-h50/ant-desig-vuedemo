@@ -1,8 +1,7 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="houseSubmit">
 		<a-form-item label="学生标识">
-			<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]"
-				placeholder="请输入学生标识" />
+			<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]" placeholder="请输入学生标识" />
 		</a-form-item>
 		<a-form-item label="成员类型">
 			<a-select v-decorator="['genre',{ rules: [{ required: true, message: '成员类型不能为空' }] },
@@ -42,14 +41,15 @@
 			</a-select>
 		</a-form-item>
 		<a-form-item label="电话">
-			<a-input v-decorator="['hPhone', { rules: [{ required: true, message: '电话不能为空'}]}]"
-				placeholder="请输入电话" />
+			<a-input v-decorator="['hPhone', { rules: [{ required: true, message: '电话不能为空'}]}]" placeholder="请输入电话" />
 		</a-form-item>
 		<a-form-item label="出生日期" style="margin-bottom:0;">
-		    <a-date-picker v-decorator="['hBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]" style="width: 100%" />
+			<a-date-picker v-decorator="['hBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]"
+				style="width: 100%" />
 		</a-form-item>
 		<a-form-item label="身份证号码">
-			<a-input v-decorator="['hCard', { rules: [{ required: true, message: '身份证号码不能为空'},{min:18,len:18,message: '请输入正确的格式'}]}]"
+			<a-input
+				v-decorator="['hCard', { rules: [{ required: true, message: '身份证号码不能为空'},{min:18,len:18,message: '请输入正确的格式'}]}]"
 				placeholder="请输入身份证号码" />
 		</a-form-item>
 		<a-form-item label="状态">
@@ -69,8 +69,7 @@
 			</a-select>
 		</a-form-item>
 		<a-form-item label="备注">
-			<a-input v-decorator="['hRemark', { rules: [{ required: false}]}]"
-				placeholder="请输入备注" />
+			<a-input v-decorator="['hRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
 		</a-form-item>
 		<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
 			<a-button type="primary" html-type="submit">
@@ -90,23 +89,23 @@
 				form: this.$form.createForm(this),
 			};
 		},
-		methods:{
-			houseSubmit(){
+		methods: {
+			houseSubmit() {
 				this.form.validateFields((err, values) => {
 					if (!err) {
 						const datas = JSON.parse(JSON.stringify(values))
 						//console.log(values);
-						request.post('/api/admin/house/add',datas)
-						.then(res => {
-							this.$message.success("添加成功！")
-							this.form.resetFields();
-							this.reload();  //刷新
-						})
-						.catch(error =>{
-							this.$message.error("添加失败！")
-							this.form.resetFields();
-							//this.reload();  //刷新
-						})
+						request.post('/api/admin/house/add', datas)
+							.then(res => {
+								this.$message.success("添加成功！")
+								this.form.resetFields();
+								this.reload(); //刷新
+							})
+							.catch(error => {
+								this.$message.error("添加失败！")
+								this.form.resetFields();
+								//this.reload();  //刷新
+							})
 					}
 				});
 			},
