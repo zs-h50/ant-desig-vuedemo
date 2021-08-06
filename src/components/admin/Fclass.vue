@@ -4,7 +4,7 @@
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
 					<a-form-item label="班级标识">
-						<a-input disabled v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
+						<a-input  v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
 							placeholder="请输入班级标识" />
 					</a-form-item>
 					<a-form-item label="班级名称">
@@ -25,7 +25,7 @@
 		</a-button>
 		<a-input-search placeholder="请输入要搜索的班级名称" enter-button="搜索" size="large" class="input-search"
 			@search="onSearch" />
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 600,y:385}" row-key="cId">
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 470,y:385}" row-key="cId">
 
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">

@@ -2,7 +2,7 @@
 	<div>
 		<a-button size="large" @click="showModal()" type="primary" icon="plus-square">
 			新增
-			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
+			<a-modal width="80%" title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<AddEditFrom />
 			</a-modal>
@@ -22,7 +22,7 @@
 			</span>
 
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="editModal(record)">编辑
-				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
+				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels"  width="80%">
 					<a-form-model :model="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }"
 						:wrapper-col="{ span: 12 }">
 						<a-form-model-item ref="sName" prop="sName" label="姓名">
@@ -98,7 +98,11 @@
 							<a-input v-model="upform.remark" placeholder="备注" />
 						</a-form-model-item>
 						<a-form-model-item ref="cId" prop="cId" label="班级标识">
-							<a-input v-model="upform.cId" placeholder="班级标识" />
+							<a-select v-model="upform.cId" placeholder="班级">
+								<a-select-option v-for="(item,index) in fclass" :value="item.cId">
+									{{item.classname}}
+								</a-select-option>
+							</a-select>
 						</a-form-model-item>
 						<a-form-model-item :wrapper-col="{ span: 12, offset: 10 }">
 							<a-button type="primary" @click="editSubmit">
@@ -326,6 +330,7 @@
 					cId: '',
 					situation: ''
 				},
+				fclass:[],
 				rules: {
 					sName: [{
 						required: true,
@@ -439,8 +444,19 @@
 		},
 		created() {
 			this.studentload()
+			this.Fclassload()
 		},
 		methods: {
+			Fclassload() {
+				request.post("/api/admin/fclass/select")
+					.then(res => {
+						this.fclass = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询失败！")
+						//this.reload();
+					})
+			},
 			showModal() {
 				this.visible = true;
 				//console.log(this.visible)

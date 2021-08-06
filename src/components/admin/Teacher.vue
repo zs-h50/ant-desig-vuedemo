@@ -143,21 +143,16 @@
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }"
-						@submit="editSubmit">
-						<a-form-item label="教师编号">
-							<a-input disabled v-model:value="upform.tNo"
-								v-decorator="['tNo', { rules: [{ required: true, message: '教师编号不能为空'}]}]"
-								placeholder="请输入教师编号" />
-						</a-form-item>
-						<a-form-item label="教师姓名">
-							<a-input v-model:value="upform.tName" v-decorator="['tName',{ rules: [{ required: true, message: '教师姓名不能为空' }] },
-					]" placeholder="请输入教师姓名"></a-input>
-						</a-form-item>
-						<a-form-item label="性别">
-							<a-select v-model:value="upform.tGender"
-								v-decorator="['tGender',{ rules: [{ required: true, message: '性别不能为空' }] },]"
-								placeholder="选择性别">
+					<a-form-model :form="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }"
+						:wrapper-col="{ span: 12 }">
+						<a-form-model-item ref="tNo" prop="tNo" label="教师编号">
+							<a-input disabled v-model="upform.tNo" placeholder="请输入教师编号" />
+						</a-form-model-item>
+						<a-form-model-item ref="tName" prop="tName" label="教师姓名">
+							<a-input v-model="upform.tName" placeholder="请输入教师姓名"></a-input>
+						</a-form-model-item>
+						<a-form-model-item ref="tGender" prop="tGender" label="性别">
+							<a-select v-model="upform.tGender" placeholder="选择性别">
 								<a-select-option value="1">
 									男
 								</a-select-option>
@@ -165,42 +160,27 @@
 									女
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="电话">
-							<a-input v-model:value="upform.tPhone"
-								v-decorator="['tPhone', { rules: [{ required: true, message: '电话不能为空'},{min:11,len:11,message: '请输入正确的格式'}]}]"
-								placeholder="请输入电话" />
-						</a-form-item>
-						<a-form-item label="邮箱">
-							<a-input v-model:value="upform.tEmail"
-								v-decorator="['tEmail', { rules: [{ required: true, message: '邮箱不能为空'}]}]"
-								placeholder="请输入邮箱" />
-						</a-form-item>
-						<a-form-item label="出生日期" style="margin-bottom:0;">
-							<a-date-picker v-model:value="upform.tBirthday"
-								v-decorator="['tBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]"
-								style="width: 100%" />
-						</a-form-item>
-						<a-form-item label="身份证号码">
-							<a-input v-model:value="upform.tCard"
-								v-decorator="['tCard', { rules: [{ required: true, message: '身份证号码不能为空'}]}]"
-								placeholder="请输入身份证号码" />
-						</a-form-item>
-						<a-form-item label="毕业学校">
-							<a-input v-model:value="upform.tSchool"
-								v-decorator="['tSchool', { rules: [{ required: true, message: '毕业学校不能为空'}]}]"
-								placeholder="请输入毕业学校" />
-						</a-form-item>
-						<a-form-item label="毕业年份">
-							<a-input v-model:value="upform.tYear"
-								v-decorator="['tYear', { rules: [{ required: true, message: '毕业年份不能为空'}]}]"
-								placeholder="请输入毕业年份" />
-						</a-form-item>
-						<a-form-item label="学历">
-							<a-select v-model:value="upform.tEducation" v-decorator="[
-					  'tEducation',
-					  { rules: [{ required: true, message: '学历不能为空' }] },
-					]" placeholder="请选择">
+						</a-form-model-item>
+						<a-form-model-item ref="tPhone" prop="tPhone" label="电话">
+							<a-input v-model="upform.tPhone" placeholder="请输入电话" />
+						</a-form-model-item>
+						<a-form-model-item ref="tEmail" prop="tEmail" label="邮箱">
+							<a-input v-model="upform.tEmail" placeholder="请输入邮箱" />
+						</a-form-model-item>
+						<a-form-model-item ref="tBirthday" prop="tBirthday" label="出生日期" style="margin-bottom:0;">
+							<a-date-picker v-model="upform.tBirthday" style="width: 100%" />
+						</a-form-model-item>
+						<a-form-model-item ref="tCard" prop="tCard" label="身份证号码">
+							<a-input v-model="upform.tCard" placeholder="请输入身份证号码" />
+						</a-form-model-item>
+						<a-form-model-item ref="tSchool" prop="tSchool" label="毕业学校">
+							<a-input v-model="upform.tSchool" placeholder="请输入毕业学校" />
+						</a-form-model-item>
+						<a-form-model-item ref="tYear" prop="tYear" label="毕业年份">
+							<a-input v-model="upform.tYear" placeholder="请输入毕业年份" />
+						</a-form-model-item>
+						<a-form-model-item ref="tEducation" prop="tEducation" label="学历">
+							<a-select v-model="upform.tEducation" placeholder="请选择">
 								<a-select-option value="0">
 									大专
 								</a-select-option>
@@ -214,12 +194,9 @@
 									博士
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="学位">
-							<a-select v-model:value="upform.tDegree" v-decorator="[
-					  'tDegree',
-					  { rules: [{ required: true, message: '学位不能为空' }] },
-					]" placeholder="请选择">
+						</a-form-model-item>
+						<a-form-model-item ref="tDegree" prop="tDegree" label="学位">
+							<a-select v-model="upform.tDegree" placeholder="请选择">
 								<a-select-option value="0">
 									学士
 								</a-select-option>
@@ -233,17 +210,12 @@
 									院士
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="专业">
-							<a-input v-model:value="upform.tMajor"
-								v-decorator="['tMajor', { rules: [{ required: true, message: '专业不能为空'}]}]"
-								placeholder="请输入专业" />
-						</a-form-item>
-						<a-form-item label="状态">
-							<a-select v-model:value="upform.tFettle" v-decorator="[
-					  'tFettle',
-					  { rules: [{ required: true, message: '状态不能为空' }] },
-					]" placeholder="请选择">
+						</a-form-model-item>
+						<a-form-model-item ref="tMajor" prop="tMajor" label="专业">
+							<a-input v-model="upform.tMajor" placeholder="请输入专业" />
+						</a-form-model-item>
+						<a-form-model-item ref="tFettle" prop="tFettle" label="状态">
+							<a-select v-model="upform.tFettle" placeholder="请选择">
 								<a-select-option value="0">
 									在职
 								</a-select-option>
@@ -251,16 +223,15 @@
 									离职
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="备注">
-							<a-input v-model:value="upform.tRemark"
-								v-decorator="['tRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
-						</a-form-item>
-						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-							<a-button type="primary" html-type="submit">
+						</a-form-model-item>
+						<a-form-model-item ref="tRemark" prop="tRemark" label="备注">
+							<a-input v-model="upform.tRemark" placeholder="请输入备注" />
+						</a-form-model-item>
+						<a-form-model-item :wrapper-col="{ span: 12, offset: 5 }">
+							<a-button type="primary" @click="editSubmit">
 								提交
 							</a-button>
-						</a-form-item>
+						</a-form-model-item>
 					</a-form-model>
 				</a-modal>
 			</a-button>
@@ -450,6 +421,92 @@
 					tFettle: '',
 					tRemark: '',
 				},
+				rules: {
+					tNo: [{
+						required: false,
+						message: '请输入修改的编号',
+						trigger: 'blur'
+					}, ],
+					tName: [{
+						required: true,
+						message: '请输入修改的姓名',
+						trigger: 'blur'
+					}, ],
+					tGender: [{
+						required: true,
+						message: '请输入修改的性别',
+						trigger: 'blur'
+					}, ],
+					tPhone: [{
+						required: true,
+						message: '请输入修改的电话号码',
+						trigger: 'blur'
+					}, {
+						min: 11,
+						max: 11,
+						message: '请输入11位正确格式电话号码',
+						trigger: 'blur'
+					}],
+					tEmail: [{
+						required: true,
+						message: '请输入修改的邮箱',
+						trigger: 'blur'
+					}, {
+						type: 'email',
+						message: '请输入正确格式邮箱XXX@XX.com',
+						trigger: 'blur'
+					}],
+					tBirthday: [{
+						required: true,
+						message: '请输入修改的出生日期',
+						trigger: 'blur'
+					}, ],
+					tCard: [{
+						required: true,
+						message: '请输入修改的身份证号码',
+						trigger: 'blur'
+					}, {
+						min: 18,
+						max: 18,
+						message: '请输入18位正确格式身份证号码',
+						trigger: 'blur'
+					}],
+					tSchool: [{
+						required: true,
+						message: '请输入修改的毕业学校',
+						trigger: 'blur'
+					}, ],
+					tYear: [{
+						required: true,
+						message: '请输入修改的毕业年份',
+						trigger: 'blur'
+					}, ],
+					tEducation: [{
+						required: true,
+						message: '请输入修改的学历',
+						trigger: 'blur'
+					}, ],
+					tDegree: [{
+						required: true,
+						message: '请输入修改的学位',
+						trigger: 'blur'
+					}, ],
+					tMajor: [{
+						required: true,
+						message: '请输入修改的专业',
+						trigger: 'blur'
+					}, ],
+					tFettle: [{
+						required: true,
+						message: '请输入修改的状态',
+						trigger: 'blur'
+					}, ],
+					tRemark: [{
+						required: false,
+						message: '请输入修改的备注',
+						trigger: 'blur'
+					}, ],
+				},
 			};
 		},
 		created() {
@@ -501,15 +558,23 @@
 				});
 			},
 			editSubmit() {
-				request.post('/api/admin/teacher/update', this.upform)
-					.then(res => {
-						this.$message.success("修改成功！")
-						this.reload(); //刷新
-					})
-					.catch(error => {
-						this.$message.error("修改失败！")
-						this.reload(); //刷新
-					})
+				this.$refs.ruleForm.validate(valid => {
+					if (valid) {
+						request.post('/api/admin/teacher/update', this.upform)
+							.then(res => {
+								this.$message.success("修改成功！")
+								this.reload(); //刷新
+							})
+							.catch(error => {
+								this.$message.error("修改失败！")
+								this.reload(); //刷新
+							})
+					} else {
+						console.log('error submit!!');
+						return false;
+					}
+				});
+
 			},
 			// 删除
 			delstu(id) {

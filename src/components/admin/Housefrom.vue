@@ -1,7 +1,7 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="houseSubmit">
 		<a-form-item label="学生标识">
-			<a-input v-decorator="['sId', { rules: [{ required: true, message: '学生标识不能为空'}]}]" placeholder="请输入学生标识" />
+			<a-input v-decorator="['sId', { rules: [{ required: false, message: '学生标识不能为空'}]}]" placeholder="请输入学生标识" />
 		</a-form-item>
 		<a-form-item label="成员类型">
 			<a-select v-decorator="['genre',{ rules: [{ required: true, message: '成员类型不能为空' }] },

@@ -6,6 +6,7 @@
 			<span slot="identity" slot-scope="text, record">
 				<span v-if="record.identity == 1">学生</span>
 				<span v-if="record.identity == 2">老师</span>
+				<span v-if="record.identity == 3">禁用</span>
 			</span>
 			<!-- 删除按钮 -->
 			<template slot="operation" slot-scope="text,record">
@@ -22,9 +23,15 @@
 						</a-form-model-item>
 
 						<a-form-model-item label="身份" ref="identity" prop="identity">
-							<a-select v-model="form.identity" placeholder="选择用户的身份">
-								<a-select-option v-for="(item,index) in Data" :value='item.id' :key="item.id">
-									{{item.name}}
+							<a-select v-model="upform.identity" placeholder="选择用户的身份">
+								<a-select-option value="1">
+									学生
+								</a-select-option>
+								<a-select-option value="2">
+									老师
+								</a-select-option>
+								<a-select-option value="3">
+									禁用
 								</a-select-option>
 							</a-select>
 						</a-form-model-item>
@@ -106,16 +113,6 @@
 					password: '',
 					identity: ''
 				},
-				Data: [{
-					id: 1,
-					name: '学生'
-				}, {
-					id: 2,
-					name: '老师'
-				}, {
-					id: 3,
-					name: '禁用'
-				}],
 				rules: {
 
 				}
@@ -126,6 +123,7 @@
 		},
 		methods: {
 			showModal(record) {
+				//console.log(record)
 				this.upform = JSON.parse(JSON.stringify(record))
 				console.log(this.upform)
 				this.visible = true;
@@ -146,47 +144,24 @@
 					})
 			},
 			handleOk(e) {
-				const user = JSON.parse(JSON.stringify(record))
-				request.put("/api/admin/operate/update", user)
-					.then(res => {
-						this.$message.success('修改用户成功！！！');
-						// this.reload();
-					})
-					.catch(res => {
-						this.$message.error('修改用户失败！！！');
-						this.reload();
-					})
+				this.$refs.ruleForm.validate(valid => {
+					if (valid) {
+						request.put("/api/admin/operate/update", this.upform)
+							.then(res => {
+								this.$message.success('修改用户成功！！！');
+								this.reload();
+							})
+							.catch(res => {
+								this.$message.error('修改用户失败！！！');
+								this.reload();
+							})
+					} else {
+						console.log('error submit!!');
+						return false;
+					}
+				});
 			},
-			// 编辑
-			onCellChange(record, dataIndex, value) {
-				console.log(value)
-				const id = record.id;
-				const dataSource = [...this.dataSource];
-				const target = dataSource.find(item => item.id === id);
-				if (target) {
-					target[dataIndex] = value;
-					console.log(value)
-					console.log("==========")
-					console.log(target[dataIndex])
-					console.log("==========")
-					console.log(dataSource)
-					this.dataSource = dataSource;
-				}
-				if (record != null) {
-					const user = JSON.parse(JSON.stringify(record))
-					request.put("/api/admin/operate/update", user)
-						.then(res => {
-							this.$message.success('修改用户成功！！！');
-							// this.reload();
-						})
-						.catch(res => {
-							this.$message.error('修改用户失败！！！');
-							this.reload();
-						})
-				} else {
-					this.$message.error('不能为空！！！');
-				}
-			},
+			
 		},
 	}
 </script>

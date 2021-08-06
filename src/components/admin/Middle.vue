@@ -57,6 +57,9 @@
 						<a-menu-item key="7">
 							<router-link to="exam">成绩信息</router-link>
 						</a-menu-item>
+						<a-menu-item key="8">
+							<router-link to="addcourse">课程管理</router-link>
+						</a-menu-item>
 					</a-sub-menu>
 				</a-sub-menu>
 			</a-menu>
@@ -79,7 +82,8 @@
 	import Course from './Course.vue'
 	import Exam from './Exam.vue'
 	import Fclass from './Fclass.vue'
-	export default {
+	import AddCourse from './AddCourse.vue'
+ 	export default {
 		inject: ['reload'],
 		data() {
 			return {
@@ -93,7 +97,8 @@
 			House,
 			Teacher,
 			Exam,
-			Fclass
+			Fclass,
+			AddCourse,
 		},
 		watch: {
 			openKeys(val) {

@@ -1,6 +1,6 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-		<a-form-item label="姓名">
+		<a-form-item label="姓名" width="50%">
 			<a-input v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'}]}]"
 				placeholder="请输入学生的姓名" />
 		</a-form-item>
@@ -96,10 +96,15 @@
 		<a-form-item label="备注">
 			<a-input v-decorator="['remark', { rules: [{ required: false}] }]" placeholder="备注" />
 		</a-form-item>
-		<a-form-item label="班级标识">
-			<a-input v-decorator="['cId', { rules: [{ required: true, message: '学生班级标识不能为空' }] }]" placeholder="班级标识" />
+		<a-form-item label="班级">
+			<a-select v-decorator="[
+			  'cId',{ rules: [{ required: true, message: '学生班级不能为空' }] }]" placeholder="班级">
+				<a-select-option v-for="(item,index) in dataSource" :value="item.cId">
+					{{item.classname}}
+				</a-select-option>
+			</a-select>
 		</a-form-item>
-		<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+		<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
 			<a-button type="primary" html-type="submit">
 				提交
 			</a-button>
@@ -115,9 +120,23 @@
 			return {
 				formLayout: 'horizontal',
 				form: this.$form.createForm(this),
+				dataSource: [],
 			};
 		},
+		created() {
+			this.Fclassload()
+		},
 		methods: {
+			Fclassload() {
+				request.post("/api/admin/fclass/select")
+					.then(res => {
+						this.dataSource = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询失败！")
+						//this.reload();
+					})
+			},
 			handleSubmit(e) {
 				e.preventDefault();
 				this.form.validateFields((err, values) => {
@@ -141,3 +160,14 @@
 		},
 	};
 </script>
+<style scoped>
+	.ant-form{
+		width: 100%;
+		display: flex;
+		flex-flow:row wrap;
+		}
+	.ant-form-item{
+		width: 50%;
+	}
+	
+</style>

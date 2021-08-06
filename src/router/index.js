@@ -21,6 +21,9 @@ import Exam from '../components/admin/Exam.vue'
 import Fclass from '../components/admin/Fclass.vue'
 import Updataps from '../components/teacher/Updataps.vue'
 import Upstudent from '../components/student/Upstudent.vue'
+import AddCourse from '../components/admin/AddCourse.vue'
+
+
 Vue.use(VueRouter)
 
 //解决重复重定向问题
@@ -77,7 +80,8 @@ const routes = [
 		  {path:'teacher',name:'老师个人信息',component:Teacher},
 		  {path:'courses',name:'课程信息',component:Courses},
 		  {path:'exam',name:'成绩信息',component:Exam},
-		  {path:'fclass',name:'班级信息',component:Fclass}		  
+		  {path:'fclass',name:'班级信息',component:Fclass},
+		  {path:'addcourse',name:'课程管理',component:AddCourse}
 	  ]
   }
 ]

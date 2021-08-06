@@ -59,9 +59,49 @@
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1350, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1600, y: 385 }" :pagination="paginationOpt"
 			row-key="eId">
+			<div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+				style="padding: 8px">
+				<a-input v-ant-ref="c => (searchInput = c)" :placeholder="`输入${column.title}`" :value="selectedKeys[0]"
+					style="width: 188px; margin-bottom: 8px; display: block;"
+					@change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+					@pressEnter="() => handleSearch(selectedKeys, confirm, column.dataIndex)" />
+				<a-button type="primary" icon="search" size="small" style="width: 90px; margin-right: 8px"
+					@click="() => handleSearch(selectedKeys, confirm, column.dataIndex)">
+					搜索
+				</a-button>
+				<a-button size="small" style="width: 90px" @click="() => handleReset(clearFilters)">
+					清空
+				</a-button>
+				<!-- 图标 -->
+			</div>
+			<a-icon slot="filterIcon" slot-scope="filtered" type="search"
+				:style="{ color: filtered ? '#108ee9' : undefined }" />
 
+			<template slot="customRender" slot-scope="text, record, index, column">
+				<span v-if="searchText && searchedColumn === column.dataIndex">
+					<template v-for="(fragment, i) in text
+			            .toString()
+			            .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))">
+						<mark v-if="fragment.toLowerCase() === searchText.toLowerCase()" :key="i"
+							class="highlight">{{ fragment }}</mark>
+						<template v-else>{{ fragment }}</template>
+					</template>
+				</span>
+				<template v-else>
+					{{ text }}
+				</template>
+			</template>
+
+
+
+
+
+
+			<div :title="text" slot="cName" slot-scope="text, record">
+				<div :style="{textAlign:'left'}">{{text}}</div>
+			</div>
 			<span slot="Fettle" slot-scope="text,record">
 				<span v-if="record.eFettle == 0">开课</span>
 				<span v-if="record.eFettle == 1">结课</span>
@@ -76,14 +116,22 @@
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
 					<a-form-model :model="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-						<a-form-item ref="cId" prop="cId" label="班级标识">
-							<a-input v-model="upform.cId" placeholder="请输入班级标识" />
+						<a-form-item ref="cId" prop="cId" label="班级">
+							<a-select v-model="upform.cId" placeholder="请选择">
+								<a-select-option v-for="(item,index) in fclass" :value="item.cId">
+									{{item.classname}}
+								</a-select-option>
+							</a-select>
 						</a-form-item>
 						<a-form-item ref="courseId" prop="courseId" label="课程标识">
-							<a-input v-model="upform.courseId" placeholder="请输入课程标识"></a-input>
+							<a-input v-model="upform.courseId" placeholder="请输入课程标识" />
 						</a-form-item>
 						<a-form-item ref="tId" prop="tId" label="老师标识">
-							<a-input v-model="upform.tId" placeholder="请输入老师标识" />
+							<a-select v-model="upform.tId" placeholder="请选择">
+								<a-select-option v-for="(item,index) in datas" :value="item.tId">
+									{{item.tName}}
+								</a-select-option>
+							</a-select>
 						</a-form-item>
 						<a-form-item ref="eYear" prop="eYear" label="年份">
 							<a-input v-model="upform.eYear" placeholder="请输入年份" />
@@ -127,13 +175,13 @@
 </template>
 <script>
 	import request from '@/utils/request.js'
-	const columns = [{
+	const columns = [
+		{
 			title: 'ID',
 			width: 100,
 			align: 'center',
 			dataIndex: 'eId',
 			key: 'eId',
-			fixed: 'left'
 		},
 		{
 			title: '课程编号',
@@ -141,7 +189,7 @@
 			align: 'center',
 			dataIndex: 'course.cNo',
 			key: 'course.cNo',
-			fixed: 'left'
+
 		},
 		{
 			title: '课程名称',
@@ -149,7 +197,26 @@
 			align: 'center',
 			dataIndex: 'course.cName',
 			key: 'course.cName',
+			scopedSlots: {
+				filterDropdown: 'filterDropdown',
+				filterIcon: 'filterIcon',
+				customRender: 'customRender',
+			},
+			onFilter: (value, record) =>
+				record.course.cName
+				.toString()
+				.toLowerCase()
+				.includes(value.toLowerCase()),
+			onFilterDropdownVisibleChange: visible => {
+				if (visible) {
+					setTimeout(() => {
+						this.searchInput.focus();
+					});
+				}
+			},
+
 		},
+
 		{
 			title: '授课老师',
 			width: 100,
@@ -157,24 +224,11 @@
 			dataIndex: 'teacher.tName',
 			key: 'teacher.tName',
 		},
+
 		{
 			title: '年份',
 			dataIndex: 'eYear',
 			key: '1',
-			width: 150,
-			align: 'center',
-		},
-		{
-			title: '班级名称',
-			dataIndex: 'fclass.classname',
-			key: '2',
-			width: 150,
-			align: 'center',
-		},
-		{
-			title: '班级人数',
-			dataIndex: 'fclass.cNumber',
-			key: '3',
 			width: 150,
 			align: 'center',
 		},
@@ -188,6 +242,29 @@
 				customRender: 'eSemester'
 			}
 		},
+		{
+			title: '班级名称',
+			dataIndex: 'fclass.classname',
+			key: '2',
+			width: 150,
+			align: 'center',
+		},
+		{
+			title: '班级人数',
+			dataIndex: 'fclass.cNumber',
+			key: '3',
+			width: 60,
+			customRender: (value, row, index) => { //表体的数据列样式
+				console.log(value, row, index) //本列的值,所有行数据包括本列,第几列
+				const obj = {
+					children: value,
+					attrs: {},
+				};
+				obj.attrs.align = 'left';
+				return obj;
+			}
+		},
+
 		{
 			title: '状态',
 			dataIndex: 'eFettle',
@@ -208,7 +285,6 @@
 		{
 			title: '操作',
 			key: 'operation2',
-			fixed: 'right',
 			width: 100,
 			align: 'center',
 			scopedSlots: {
@@ -218,7 +294,6 @@
 		{
 			title: '操作',
 			key: 'operation3',
-			fixed: 'right',
 			width: 100,
 			align: 'center',
 			scopedSlots: {
@@ -235,6 +310,9 @@
 		inject: ['reload'],
 		data() {
 			return {
+				searchText: '',
+				searchInput: null,
+				searchedColumn: '',
 				formLayout: 'horizontal',
 				form: this.$form.createForm(this),
 				dataSource,
@@ -258,12 +336,51 @@
 					eRemark: '',
 					courseId: '',
 				},
+				fclass: [],
+				loads: [],
+				datas: [],
+
 			};
 		},
 		created() {
+			this.fclassload()
 			this.courseload()
+			this.load()
+			this.teacherload()
 		},
 		methods: {
+			teacherload() {
+				request.post('/api/admin/teacher/select')
+					.then(res => {
+						console.log(res.data)
+						//this.dataSource.classname = res.data.fclass.classname
+						this.datas = res.data
+						//this.reload();  //刷新
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+			},
+			load() {
+				request.post('/api/admin/addcourse/select')
+					.then(res => {
+						console.log(res.data)
+						this.load = res.data
+					})
+					.catch(error => {
+						console.log(error)
+					})
+			},
+			fclassload() {
+				request.post("/api/admin/fclass/select")
+					.then(res => {
+						this.fclass = res.data
+					})
+					.catch(error => {
+						this.$message.error("查询失败！")
+						//this.reload();
+					})
+			},
 			showModal() {
 				this.visible = true
 			},
@@ -331,9 +448,30 @@
 						this.reload(); //刷新
 					})
 			},
+			handleSearch(selectedKeys, confirm, dataIndex) {
+				confirm();
+				this.searchText = selectedKeys[0];
+				this.searchedColumn = dataIndex;
+			},
+
+			handleReset(clearFilters) {
+				clearFilters();
+				this.searchText = '';
+			},
+
 		},
 		components: {
 
 		}
 	};
 </script>
+<style scoped>
+	/deep/.ant-table-thead>tr>th {
+		white-space: nowrap;
+		text-align: center;
+	}
+
+	/deep/.ant-table-row td {
+		white-space: nowrap;
+	}
+</style>
