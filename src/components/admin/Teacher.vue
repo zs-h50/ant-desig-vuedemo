@@ -1,12 +1,12 @@
 <template>
 	<div>
-		<a-button size="small" @click="showModal()" type="primary" icon="plus-square">
+		<a-button size="large" @click="showModal()" type="primary" icon="plus-square">
 			新增
-			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
+			<a-modal width="80%" title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
 					<a-form-item label="教师编号">
-						<a-input v-decorator="['tNo', { rules: [{ required: false, message: '教师编号不能为空'}]}]"
+						<a-input disabled v-decorator="['tNo', { rules: [{ required: false, message: '教师编号不能为空'}]}]"
 							placeholder="请输入教师编号" />
 					</a-form-item>
 					<a-form-item label="教师姓名">
@@ -141,7 +141,7 @@
 				<span v-if="record.tFettle == 1">离职</span>
 			</span>
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
-				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
+				<a-modal title="修改" width="80%" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
 					<a-form-model :form="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }"
 						:wrapper-col="{ span: 12 }">
@@ -386,7 +386,8 @@
 	const dataSource = [{
 		tId: '1',
 	}, ];
-
+	import moment from 'moment'
+	import 'moment/locale/zh-cn'
 	export default {
 		inject: ['reload'],
 		data() {
@@ -426,17 +427,17 @@
 						required: false,
 						message: '请输入修改的编号',
 						trigger: 'blur'
-					}, ],
+					}],
 					tName: [{
 						required: true,
 						message: '请输入修改的姓名',
 						trigger: 'blur'
-					}, ],
+					}],
 					tGender: [{
 						required: true,
 						message: '请输入修改的性别',
 						trigger: 'blur'
-					}, ],
+					}],
 					tPhone: [{
 						required: true,
 						message: '请输入修改的电话号码',
@@ -475,37 +476,37 @@
 						required: true,
 						message: '请输入修改的毕业学校',
 						trigger: 'blur'
-					}, ],
+					}],
 					tYear: [{
 						required: true,
 						message: '请输入修改的毕业年份',
 						trigger: 'blur'
-					}, ],
+					}],
 					tEducation: [{
 						required: true,
 						message: '请输入修改的学历',
 						trigger: 'blur'
-					}, ],
+					}],
 					tDegree: [{
 						required: true,
 						message: '请输入修改的学位',
 						trigger: 'blur'
-					}, ],
+					}],
 					tMajor: [{
 						required: true,
 						message: '请输入修改的专业',
 						trigger: 'blur'
-					}, ],
+					}],
 					tFettle: [{
 						required: true,
 						message: '请输入修改的状态',
 						trigger: 'blur'
-					}, ],
+					}],
 					tRemark: [{
 						required: false,
 						message: '请输入修改的备注',
 						trigger: 'blur'
-					}, ],
+					}],
 				},
 			};
 		},
@@ -530,9 +531,7 @@
 				request.post('/api/admin/teacher/select')
 					.then(res => {
 						console.log(res.data)
-						//this.dataSource.classname = res.data.fclass.classname
 						this.dataSource = res.data
-						//this.reload();  //刷新
 					})
 					.catch(error => {
 						this.$message.error("查询错误！！")
@@ -542,17 +541,15 @@
 				this.form.validateFields((err, values) => {
 					if (!err) {
 						const datas = JSON.parse(JSON.stringify(values))
-						//console.log(values);
 						request.post('/api/admin/teacher/add', datas)
 							.then(res => {
-								this.$message.success("添加成功！")
-								this.form.resetFields();
-								this.reload(); //刷新
-							})
-							.catch(error => {
-								this.$message.error("用户存在，新增失败！")
-								this.form.resetFields();
-								this.reload(); //刷新
+								if(res.code == "100"){
+									this.$message.error("新增教师用户失败")
+								} else if(res.code == "0"){
+									this.$message.success("添加成功！")
+									this.form.resetFields();
+									this.reload(); //刷新
+								}
 							})
 					}
 				});
@@ -592,7 +589,19 @@
 			},
 		},
 		components: {
-
+			moment,
 		}
 	};
 </script>
+<style scoped>
+	.ant-form {
+		width: 100%;
+		display: flex;
+		/* flex-flow:wrap 规定灵活的项目在必要的时候拆行或拆列。 */
+		flex-wrap: wrap;
+	}
+
+	.ant-form-item {
+		width: 50%;
+	}
+</style>

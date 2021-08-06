@@ -5,7 +5,7 @@
 				placeholder="请输入学生的姓名" />
 		</a-form-item>
 		<a-form-item label="学号">
-			<a-input v-decorator="['sNo', { rules: [{ required: false, message: '学生学号不能为空' }] }]"
+			<a-input disabled v-decorator="['sNo', { rules: [{ required: false, message: '学生学号不能为空' }] }]"
 				placeholder="请输入学生的学号" />
 		</a-form-item>
 		<a-form-item label="性别">
@@ -55,7 +55,7 @@
 		</a-form-item>
 		<a-form-item label="邮编">
 			<a-input
-				v-decorator="['postcode', { rules: [{ required: true, message: '学生邮编不能为空' },{min:5,len:5,message: '请输入正确的格式'}] }]"
+				v-decorator="['postcode', { rules: [{ required: true, message: '学生邮编不能为空' },{min:6,len:6,message: '请输入正确的格式'}] }]"
 				placeholder="请输入学生的邮编" />
 		</a-form-item>
 		<a-form-item label="家庭状况">
@@ -144,16 +144,15 @@
 						const datas = JSON.parse(JSON.stringify(values))
 						//console.log(values);
 						request.post('/api/admin/studentinfo/add', datas)
-							.then(res => {
+						.then(res => {
+							if(res.code == "-1"){
+								this.$message.error("学生已存在，请重填写！")
+							}else if(res.code == "0"){
 								this.$message.success("学生添加成功！")
 								this.form.resetFields();
 								this.reload(); //刷新
-							})
-							.catch(error => {
-								this.$message.error("用户已存在，添加失败！")
-								this.form.resetFields();
-								//this.reload();  //刷新
-							})
+							}
+						})
 					}
 				});
 			},

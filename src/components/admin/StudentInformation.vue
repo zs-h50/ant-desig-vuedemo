@@ -2,14 +2,19 @@
 	<div>
 		<a-button size="large" @click="showModal()" type="primary" icon="plus-square">
 			新增
-			<a-modal width="80%" title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
+			<a-modal width="60%" title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<AddEditFrom />
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 3100, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 3200, y: 385 }" :pagination="paginationOpt"
 			row-key="sId">
+			<!-- 序号 -->
+			<span slot="num" slot-scope="text,record,index">
+				{{(paginationOpt.defaultCurrent-1)*paginationOpt.defaultPageSize+parseInt(index)+1}}
+			</span>
+
 			<span slot="gender" slot-scope="text,record">
 				<span v-if="record.gender == 0">女</span>
 				<span v-if="record.gender == 1">男</span>
@@ -22,7 +27,7 @@
 			</span>
 
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="editModal(record)">编辑
-				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels"  width="80%">
+				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels" width="60%">
 					<a-form-model :model="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }"
 						:wrapper-col="{ span: 12 }">
 						<a-form-model-item ref="sName" prop="sName" label="姓名">
@@ -123,6 +128,16 @@
 	import AddEditFrom from './AddEditFrom.vue'
 	import request from '@/utils/request.js'
 	const columns = [{
+			title: "序号",
+			width: 100,
+			align: 'center',
+			fixed: 'left',
+			scopedSlots: {
+				customRender: 'num'
+			},
+		},
+
+		{
 			title: 'ID',
 			width: 100,
 			align: 'center',
@@ -308,6 +323,20 @@
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
+					// pageSize 变化的回调
+					onShowSizeChange: (current, pageSize) => {
+						this.paginationOpt.defaultCurrent = 1;
+						this.paginationOpt.defaultPageSize = pageSize;
+						//this.searchCameraFrom(); //显示列表的接口名称
+					},
+					// 改变每页数量时更新显示
+					//onChange页码改变的回调，参数是改变后的页码及每页条数
+					onChange: (current, size) => {
+						this.paginationOpt.defaultCurrent = current;
+						this.paginationOpt.defaultPageSize = size;
+						//this.searchCameraFrom();
+					},
+
 				},
 				upform: {
 					sName: '',
@@ -330,7 +359,7 @@
 					cId: '',
 					situation: ''
 				},
-				fclass:[],
+				fclass: [],
 				rules: {
 					sName: [{
 						required: true,
@@ -454,12 +483,10 @@
 					})
 					.catch(error => {
 						this.$message.error("查询失败！")
-						//this.reload();
 					})
 			},
 			showModal() {
 				this.visible = true;
-				//console.log(this.visible)
 			},
 			editModal(record) {
 				this.visibles = true;
@@ -467,18 +494,16 @@
 				console.log(this.upform)
 			},
 			handleCancel(e) {
-				// console.log('Clicked cancel button');
 				this.visible = false;
 			},
 			handleCancels(e) {
-				// console.log('Clicked cancel button');
 				this.visibles = false;
 			},
 			// 查询学生信息
 			studentload() {
 				request.post('/api/admin/studentinfo/select')
 					.then(res => {
-						console.log(res.data)
+						// console.log(res.data)
 						//this.dataSource.classname = res.data.fclass.classname
 						this.dataSource = res.data
 						//this.reload();  //刷新
@@ -488,7 +513,6 @@
 					})
 			},
 			editSubmit() {
-
 				this.$refs.ruleForm.validate(valid => {
 					if (valid) {
 						request.post('/api/admin/studentinfo/update', this.upform)
@@ -510,7 +534,6 @@
 			// 删除
 			delstu(id) {
 				console.log(id)
-				//const sid = id
 				request.delete('/api/admin/studentinfo/delete/' + id)
 					.then(res => {
 						this.$message.success("删除成功!!")
@@ -521,10 +544,20 @@
 						//this.reload();  //刷新
 					})
 			},
-
 		},
 		components: {
 			AddEditFrom,
 		},
 	};
 </script>
+<style scoped>
+	.ant-form{
+		width: 100%;
+		display: flex;
+		/* flex-flow:wrap 规定灵活的项目在必要的时候拆行或拆列。 */
+		flex-flow:wrap;
+		}
+	.ant-form-item{
+		width: 50%;
+	}
+</style>

@@ -115,28 +115,33 @@
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
-					<a-form-model :model="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-						<a-form-item ref="cId" prop="cId" label="班级">
+					<a-form-model :model="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 7 }"
+						:wrapper-col="{ span: 12 }">
+						<a-form-model-item ref="cId" prop="cId" label="班级">
 							<a-select v-model="upform.cId" placeholder="请选择">
 								<a-select-option v-for="(item,index) in fclass" :value="item.cId">
 									{{item.classname}}
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item ref="courseId" prop="courseId" label="课程标识">
-							<a-input v-model="upform.courseId" placeholder="请输入课程标识" />
-						</a-form-item>
-						<a-form-item ref="tId" prop="tId" label="老师标识">
+						</a-form-model-item>
+						<a-form-model-item ref="courseId" prop="courseId" label="课程名称">
+							<a-select v-model="upform.courseId" placeholder="请选择">
+								<a-select-option v-for="(item,index) in loads" :value="item.cId">
+									{{item.cName}}
+								</a-select-option>
+							</a-select>
+						</a-form-model-item>
+						<a-form-model-item ref="tId" prop="tId" label="老师标识">
 							<a-select v-model="upform.tId" placeholder="请选择">
 								<a-select-option v-for="(item,index) in datas" :value="item.tId">
 									{{item.tName}}
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item ref="eYear" prop="eYear" label="年份">
+						</a-form-model-item>
+						<a-form-model-item ref="eYear" prop="eYear" label="年份">
 							<a-input v-model="upform.eYear" placeholder="请输入年份" />
-						</a-form-item>
-						<a-form-item ref="eSemester" prop="eSemester" label="学期">
+						</a-form-model-item>
+						<a-form-model-item ref="eSemester" prop="eSemester" label="学期">
 							<a-select v-model="upform.eSemester" placeholder="请选择">
 								<a-select-option value="1">
 									第一学期
@@ -145,8 +150,8 @@
 									第二学期
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item ref="eFettle" prop="eFettle" label="状态">
+						</a-form-model-item>
+						<a-form-model-item ref="eFettle" prop="eFettle" label="状态">
 							<a-select v-model="upform.eFettle" placeholder="请选择">
 								<a-select-option value="0">
 									开课
@@ -155,15 +160,15 @@
 									结课
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item ref="eRemark" prop="eRemark" label="备注">
+						</a-form-model-item>
+						<a-form-model-item ref="eRemark" prop="eRemark" label="备注">
 							<a-input v-model="upform.eRemark" placeholder="请输入备注" />
-						</a-form-item>
-						<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
+						</a-form-model-item>
+						<a-form-model-item :wrapper-col="{ span: 12, offset: 10 }">
 							<a-button type="primary" @click="editSubmit">
 								提交
 							</a-button>
-						</a-form-item>
+						</a-form-model-item>
 					</a-form-model>
 				</a-modal>
 			</a-button>
@@ -336,6 +341,43 @@
 					eRemark: '',
 					courseId: '',
 				},
+				rules:{
+					cId: [{
+						required: true,
+						message: '请输入修改的课程',
+						trigger: 'blur'
+					}, ],
+					tId: [{
+						required: true,
+						message: '请输入修改的老师',
+						trigger: 'blur'
+					}, ],
+					eYear: [{
+						required: true,
+						message: '请输入修改的年份',
+						trigger: 'blur'
+					}, ],
+					eSemester: [{
+						required: true,
+						message: '请输入修改的学期',
+						trigger: 'blur'
+					}, ],
+					eFettle: [{
+						required: true,
+						message: '请输入修改的状态',
+						trigger: 'blur'
+					}, ],
+					eRemark: [{
+						required: false,
+						message: '请输入修改的备注',
+						trigger: 'blur'
+					}, ],
+					courseId: [{
+						required: true,
+						message: '请输入修改的姓名',
+						trigger: 'blur'
+					}, ],
+				},
 				fclass: [],
 				loads: [],
 				datas: [],
@@ -365,7 +407,7 @@
 				request.post('/api/admin/addcourse/select')
 					.then(res => {
 						console.log(res.data)
-						this.load = res.data
+						this.loads = res.data
 					})
 					.catch(error => {
 						console.log(error)
