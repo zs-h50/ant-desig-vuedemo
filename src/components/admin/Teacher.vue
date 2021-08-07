@@ -109,7 +109,7 @@
 					<a-form-item label="备注">
 						<a-input v-decorator="['tRemark', { rules: [{ required: false}]}]" placeholder="请输入备注" />
 					</a-form-item>
-					<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+					<a-form-item :wrapper-col="{ span: 12, offset: 20 }">
 						<a-button type="primary" html-type="submit">
 							提交
 						</a-button>
@@ -137,13 +137,13 @@
 				<span v-if="record.tDegree == 3">院士</span>
 			</span>
 			<span slot="tFettle" slot-scope="text,record">
-				<span v-if="record.tFettle == 0">在职</span>
-				<span v-if="record.tFettle == 1">离职</span>
+				<a-tag color="green" v-if="record.tFettle == 0" style="font-size: 13px;">在职</a-tag>
+				<a-tag color="red" v-if="record.tFettle == 1" style="font-size: 13px;">离职</a-tag>
 			</span>
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="enditModal(record)">编辑
 				<a-modal title="修改" width="80%" :visible="visibles" :footer="null" @cancel="handleCancels">
 					<!-- 放个表单 -->
-					<a-form-model :form="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }"
+					<a-form-model :model="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }"
 						:wrapper-col="{ span: 12 }">
 						<a-form-model-item ref="tNo" prop="tNo" label="教师编号">
 							<a-input disabled v-model="upform.tNo" placeholder="请输入教师编号" />
@@ -227,7 +227,7 @@
 						<a-form-model-item ref="tRemark" prop="tRemark" label="备注">
 							<a-input v-model="upform.tRemark" placeholder="请输入备注" />
 						</a-form-model-item>
-						<a-form-model-item :wrapper-col="{ span: 12, offset: 5 }">
+						<a-form-model-item :wrapper-col="{ span: 12, offset: 20 }">
 							<a-button type="primary" @click="editSubmit">
 								提交
 							</a-button>
@@ -237,11 +237,32 @@
 			</a-button>
 			<a-button slot="action3" slot-scope="text,record" size="small" type="danger" icon="delete"
 				@click="delstu(record.tNo)">删除</a-button>
+			<a-button slot="action" slot-scope="text,record" size="small" type="dashed" icon="search"
+				@click="selectFclass(record.tId)">查看
+				<a-modal title="授课班级" :visible="Onselect" @cancel="selectCancels" :footer='null'>
+					<div v-infinite-scroll="handleInfiniteOnLoad" class="demo-infinite-container"
+						:infinite-scroll-disabled="busy" :infinite-scroll-distance="10">
+						<a-list :data-source="data">
+							<a-list-item slot="renderItem" slot-scope="item, index">
+								<a-list-item-meta :description="item.course.cName">
+									<a slot="title" :href="item.href">{{ item.fclass.classname }}</a>
+								</a-list-item-meta>
+								<div>班级人数：{{item.fclass.cNumber}}</div>
+							</a-list-item>
+							<div v-if="loading && !busy" class="demo-loading-container">
+								<a-spin />
+							</div>
+						</a-list>
+					</div>
+				</a-modal>
+			</a-button>
 		</a-table>
 	</div>
 
 </template>
 <script>
+	import reqwest from 'reqwest';
+	import infiniteScroll from 'vue-infinite-scroll';
 	import request from '@/utils/request.js'
 	const columns = [{
 			title: 'ID',
@@ -381,29 +402,56 @@
 				customRender: 'action3'
 			},
 		},
+		{
+			title: '操作',
+			key: 'operation',
+			fixed: 'right',
+			width: 100,
+			align: 'center',
+			scopedSlots: {
+				customRender: 'action'
+			},
+		},
 	];
 
 	const dataSource = [{
 		tId: '1',
-	}, ];
-	import moment from 'moment'
-	import 'moment/locale/zh-cn'
+	}];
 	export default {
 		inject: ['reload'],
+		directives: {
+			infiniteScroll
+		},
 		data() {
 			return {
 				formLayout: 'horizontal',
 				form: this.$form.createForm(this),
 				dataSource,
+				data: [],
+				loading: false,
+				busy: false,
 				columns,
 				visible: false,
 				visibles: false,
+				Onselect: false,
 				paginationOpt: {
 					defaultCurrent: 1, // 默认当前页数
 					defaultPageSize: 8, // 默认当前页显示数据的大小
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
+					onShowSizeChange: (current, pageSize) => {
+						this.paginationOpt.defaultCurrent = 1;
+						this.paginationOpt.defaultPageSize = pageSize;
+						//this.searchCameraFrom(); //显示列表的接口名称
+					},
+					// 改变每页数量时更新显示
+					//onChange页码改变的回调，参数是改变后的页码及每页条数
+					onChange: (current, size) => {
+						this.paginationOpt.defaultCurrent = current;
+						this.paginationOpt.defaultPageSize = size;
+						//this.searchCameraFrom();
+					},
 				},
 				upform: {
 					tId: '',
@@ -514,6 +562,23 @@
 			this.teacherload()
 		},
 		methods: {
+			handleInfiniteOnLoad() {
+				const data = this.data;
+				this.loading = true;
+				if (data.length > 14) {
+					this.$message.warning('Infinite List loaded all');
+					this.busy = true;
+					this.loading = false;
+					return;
+				}
+			},
+			selectFclass(id) {
+				request.post('/api/admin/teacher/fclass', id)
+					.then(res => {
+						this.data = res.data
+					})
+				this.Onselect = true
+			},
 			showModal() {
 				this.visible = true
 			},
@@ -526,6 +591,9 @@
 			},
 			handleCancels(e) {
 				this.visibles = false;
+			},
+			selectCancels(e) {
+				this.Onselect = false
 			},
 			teacherload() {
 				request.post('/api/admin/teacher/select')
@@ -543,9 +611,9 @@
 						const datas = JSON.parse(JSON.stringify(values))
 						request.post('/api/admin/teacher/add', datas)
 							.then(res => {
-								if(res.code == "100"){
+								if (res.code == "100") {
 									this.$message.error("新增教师用户失败")
-								} else if(res.code == "0"){
+								} else if (res.code == "0") {
 									this.$message.success("添加成功！")
 									this.form.resetFields();
 									this.reload(); //刷新
@@ -589,7 +657,7 @@
 			},
 		},
 		components: {
-			moment,
+
 		}
 	};
 </script>
@@ -603,5 +671,20 @@
 
 	.ant-form-item {
 		width: 50%;
+	}
+
+	.demo-infinite-container {
+		border: 1px solid #e8e8e8;
+		border-radius: 4px;
+		overflow: auto;
+		padding: 8px 24px;
+		height: 300px;
+	}
+
+	.demo-loading-container {
+		position: absolute;
+		bottom: 40px;
+		width: 100%;
+		text-align: center;
 	}
 </style>

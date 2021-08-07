@@ -3,7 +3,7 @@
 		<a-layout-sider>
 			<!-- 左边的导航栏 -->
 			<!-- :default-selected-keys="['2']" 默认选择导航栏的选项 -->
-			<a-menu style="width: 256px;height:100vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
+			<a-menu style="width: 200px;height:100vh;" :default-selected-keys="['0']" :open-keys.sync="openKeys"
 				mode="inline" @click="handleClick" theme="dark">
 				<!-- 第一个菜单选项 -->
 				<a-sub-menu key="sub1" @titleClick="titleClick">
@@ -65,7 +65,7 @@
 			</a-menu>
 		</a-layout-sider>
 		<!-- 右边的内容 -->
-		<a-layout-content style="padding:15px 15px 15px 75px;">
+		<a-layout-content style="padding:15px 15px 15px 15px;">
 			<!-- 路由匹配到的组件将渲染在这里 -->
 			<router-view></router-view>
 		</a-layout-content>

@@ -102,6 +102,18 @@
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
+					onShowSizeChange: (current, pageSize) => {
+						this.paginationOpt.defaultCurrent = 1;
+						this.paginationOpt.defaultPageSize = pageSize;
+						//this.searchCameraFrom(); //显示列表的接口名称
+					},
+					// 改变每页数量时更新显示
+					//onChange页码改变的回调，参数是改变后的页码及每页条数
+					onChange: (current, size) => {
+						this.paginationOpt.defaultCurrent = current;
+						this.paginationOpt.defaultPageSize = size;
+						//this.searchCameraFrom();
+					},
 				},
 				columns,
 				count: 2,

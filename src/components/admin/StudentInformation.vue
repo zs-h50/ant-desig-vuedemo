@@ -19,11 +19,24 @@
 				<span v-if="record.gender == 0">女</span>
 				<span v-if="record.gender == 1">男</span>
 			</span>
-
+			
+			<span slot="father" slot-scope="text,record" v-if="record.genre == 4">
+				{{record.hName}}
+			</span>
+			<span slot="fatherphone" slot-scope="text,record" v-if="record.genre == 4">
+				{{record.hPhone}}
+			</span>
+			<span slot="mather" slot-scope="text,record" v-if="record.genre == 5">
+				{{record.hName}}
+			</span>
+			<span slot="matherphone" slot-scope="text,record" v-if="record.genre == 5">
+				<span>{{record.hPhone}}</span>
+			</span>
+			
 			<span slot="fettle" slot-scope="text,record">
-				<span v-if="record.fettle == 1">在读</span>
-				<span v-if="record.fettle == 2">休学</span>
-				<span v-if="record.fettle == 3">退学</span>
+				<a-tag color="green" v-if="record.fettle == 1" style="font-size: 13px;">在读</a-tag>
+				<a-tag color="orange" v-if="record.fettle == 2" style="font-size: 13px;">休学</a-tag>
+				<a-tag color="red" v-if="record.fettle == 3" style="font-size: 13px;">退学</a-tag>
 			</span>
 
 			<a-button slot="action2" slot-scope="text,record" size="small" icon="form" @click="editModal(record)">编辑
@@ -241,31 +254,43 @@
 		},
 		{
 			title: '父亲名称',
-			dataIndex: 'father',
+			dataIndex: 'houseHold.hName',
 			key: '12',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'father'
+			},
 		},
 		{
 			title: '父亲电话',
-			dataIndex: 'fatherphone',
+			dataIndex: 'houseHold.hPhone',
 			key: '13',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'fatherphone'
+			},
 		},
 		{
 			title: '母亲姓名',
-			dataIndex: 'mather',
+			dataIndex: 'houseHold.hName',
 			key: '14',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'mather'
+			},
 		},
 		{
 			title: '母亲电话',
-			dataIndex: 'matherphone',
+			dataIndex: 'houseHold.hPhone',
 			key: '15',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'matherphone'
+			},
 		},
 		{
 			title: '当前状态',
@@ -551,13 +576,14 @@
 	};
 </script>
 <style scoped>
-	.ant-form{
+	.ant-form {
 		width: 100%;
 		display: flex;
 		/* flex-flow:wrap 规定灵活的项目在必要的时候拆行或拆列。 */
-		flex-flow:wrap;
-		}
-	.ant-form-item{
+		flex-flow: wrap;
+	}
+
+	.ant-form-item {
 		width: 50%;
 	}
 </style>

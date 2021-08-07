@@ -1,7 +1,11 @@
 <template>
 	<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="houseSubmit">
-		<a-form-item label="学生标识">
-			<a-input v-decorator="['sId', { rules: [{ required: false, message: '学生标识不能为空'}]}]" placeholder="请输入学生标识" />
+		<a-form-item label="学生姓名">
+			<a-select v-decorator="['sId', { rules: [{ required: false, message: '学生不能为空'}]}]" placeholder="请输入学生">
+				<a-select-option v-for="(item,index) in dataSource" :value="item.sId">
+					{{item.sName}}
+				</a-select-option>
+			</a-select>
 		</a-form-item>
 		<a-form-item label="成员类型">
 			<a-select v-decorator="['genre',{ rules: [{ required: true, message: '成员类型不能为空' }] },
@@ -41,7 +45,7 @@
 			</a-select>
 		</a-form-item>
 		<a-form-item label="电话">
-			<a-input v-decorator="['hPhone', { rules: [{ required: true, message: '电话不能为空'}]}]" placeholder="请输入电话" />
+			<a-input v-decorator="['hPhone', { rules: [{ required: true, message: '电话不能为空'},{min:11,len:11,message:'请输入正确的电话号码格式'}]}]" placeholder="请输入电话" />
 		</a-form-item>
 		<a-form-item label="出生日期" style="margin-bottom:0;">
 			<a-date-picker v-decorator="['hBirthday', { rules: [{ required: true, message: '出生日期不能为空' }] }]"
@@ -55,13 +59,13 @@
 		<a-form-item label="状态">
 			<a-select v-decorator="[
 		  'hFettle',
-		  { rules: [{ required: true, message: '家庭状态不能为空' }] },
+		  { rules: [{ required: true, message: '状态不能为空' }] },
 		]" placeholder="请选择">
 				<a-select-option value="0">
-					烈士家庭
+					残疾
 				</a-select-option>
 				<a-select-option value="1">
-					离异家庭
+					生病
 				</a-select-option>
 				<a-select-option value="2">
 					正常
@@ -87,9 +91,25 @@
 			return {
 				formLayout: 'horizontal',
 				form: this.$form.createForm(this),
+				dataSource:[],
 			};
 		},
+		created() {
+			this.studentload()
+		},
 		methods: {
+			// 查询学生信息
+			studentload() {
+				request.post('/api/admin/studentinfo/select')
+					.then(res => {
+						 console.log(res.data)
+						this.dataSource = res.data
+						//this.reload();  //刷新
+					})
+					.catch(error => {
+						this.$message.error("查询错误！！")
+					})
+			},
 			houseSubmit() {
 				this.form.validateFields((err, values) => {
 					if (!err) {

@@ -6,7 +6,8 @@ import Antd from 'ant-design-vue';
 import axios from 'axios'
 import 'ant-design-vue/dist/antd.css';
 // import Vues from 'vue/dist/vue.esm.js'
- 
+ import infiniteScroll from "vue-infinite-scroll";
+Vue.use(infiniteScroll);
 Vue.prototype.$http = axios
 Vue.use(Antd);
 

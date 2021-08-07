@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<a-button size="small" @click="showModal()" type="primary" icon="plus-square">
+		<a-button size="large" @click="showModal()" type="primary" icon="plus-square">
 			新增
 			<a-modal title="新增" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
@@ -24,8 +24,8 @@
 				<span v-if="record.hGender ==1">男</span>
 			</span>
 			<span slot="hFettle" slot-scope="text,record">
-				<span v-if="record.hFettle ==0">烈士家庭</span>
-				<span v-if="record.hFettle ==1">单亲家庭</span>
+				<span v-if="record.hFettle ==0">残疾</span>
+				<span v-if="record.hFettle ==1">生病</span>
 				<span v-if="record.hFettle ==2">正常</span>
 			</span>
 
@@ -240,6 +240,18 @@
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
+					onShowSizeChange: (current, pageSize) => {
+						this.paginationOpt.defaultCurrent = 1;
+						this.paginationOpt.defaultPageSize = pageSize;
+						//this.searchCameraFrom(); //显示列表的接口名称
+					},
+					// 改变每页数量时更新显示
+					//onChange页码改变的回调，参数是改变后的页码及每页条数
+					onChange: (current, size) => {
+						this.paginationOpt.defaultCurrent = current;
+						this.paginationOpt.defaultPageSize = size;
+						//this.searchCameraFrom();
+					},
 				},
 				upform: {
 					sId: '',

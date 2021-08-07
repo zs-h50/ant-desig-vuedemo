@@ -5,17 +5,29 @@
 			<a-modal title="分配" :visible="visible" :footer="null" @cancel="handleCancel">
 				<!-- 放个表单 -->
 				<a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="addSubmit">
-					<a-form-item label="班级标识">
-						<a-input v-decorator="['cId', { rules: [{ required: true, message: '班级标识不能为空'}]}]"
-							placeholder="请输入班级标识" />
+					<a-form-item label="班级">
+						<a-select v-decorator="['cId', { rules: [{ required: true, message: '班级不能为空'}]}]"
+							placeholder="请选择">
+							<a-select-option v-for="(item,index) in fclass" :value="item.cId">
+								{{item.classname}}
+							</a-select-option>
+						</a-select>
 					</a-form-item>
-					<a-form-item label="课程标识">
-						<a-input v-decorator="['courseId',{ rules: [{ required: true, message: '课程标识不能为空' }] },
-					]" placeholder="请输入课程标识"></a-input>
+					<a-form-item label="课程">
+						<a-select v-decorator="['courseId',{ rules: [{ required: true, message: '课程不能为空' }] },
+					]" placeholder="请选择">
+							<a-select-option v-for="(item,index) in loads" :value="item.cId" v-if="item.cFettle == 0">
+								{{item.cName}}
+							</a-select-option>
+						</a-select>
 					</a-form-item>
-					<a-form-item label="老师标识">
-						<a-input v-decorator="['tId', { rules: [{ required: true, message: '老师标识不能为空'}]}]"
-							placeholder="请输入老师标识" />
+					<a-form-item label="老师">
+						<a-select v-decorator="['tId', { rules: [{ required: true, message: '老师不能为空'}]}]"
+							placeholder="请选择">
+							<a-select-option v-for="(item,index) in datas" :value="item.tId" v-if="item.tFettle == 0">
+								{{item.tName}}
+							</a-select-option>
+						</a-select>
 					</a-form-item>
 					<a-form-item label="年份">
 						<a-input v-decorator="['eYear', { rules: [{ required: true, message: '年份不能为空'}]}]"
@@ -94,21 +106,27 @@
 				</template>
 			</template>
 
+			<!-- 序号 -->
+			<span slot="num" slot-scope="text,record,index">
+				{{(paginationOpt.defaultCurrent-1)*paginationOpt.defaultPageSize+parseInt(index)+1}}
+			</span>
 
-
-
-
-
-			<div :title="text" slot="cName" slot-scope="text, record">
+			<!-- 鼠标停留显示出文字 -->
+			<div :title="text" slot="customRender" slot-scope="text, record">
 				<div :style="{textAlign:'left'}">{{text}}</div>
 			</div>
+
 			<span slot="Fettle" slot-scope="text,record">
-				<span v-if="record.eFettle == 0">开课</span>
-				<span v-if="record.eFettle == 1">结课</span>
+				<a-tag color="green" v-if="record.eFettle == 0" style="font-size: 13px;">开课</a-tag>
+				<a-tag color="red" v-if="record.eFettle == 1" style="font-size: 13px;">结课</a-tag>
 			</span>
 			<span slot="eSemester" slot-scope="text,record">
-				<span v-if="record.eSemester == 1">第一学期</span>
-				<span v-if="record.eSemester == 2">第二学期</span>
+				<a-tag color="#2db7f5" v-if="record.eSemester == 1" style="font-size: 13px;">
+					第一学期
+				</a-tag>
+				<a-tag color="#108ee9" v-if="record.eSemester == 2" style="font-size: 13px;">
+					第二学期
+				</a-tag>
 			</span>
 
 
@@ -180,7 +198,14 @@
 </template>
 <script>
 	import request from '@/utils/request.js'
-	const columns = [
+	const columns = [{
+			title: '序号',
+			width: 50,
+			align: 'center',
+			scopedSlots: {
+				customRender: 'num'
+			}
+		},
 		{
 			title: 'ID',
 			width: 100,
@@ -236,6 +261,8 @@
 			key: '1',
 			width: 150,
 			align: 'center',
+			defaultSortOrder: 'descend',
+			sorter: (a, b) => a.eYear - b.eYear,
 		},
 		{
 			title: '学期',
@@ -245,7 +272,18 @@
 			align: 'center',
 			scopedSlots: {
 				customRender: 'eSemester'
-			}
+			},
+			filters: [{
+					text: '第一学期',
+					value: '第一学期',
+				},
+				{
+					text: '第二学期',
+					value: '第二学期',
+				},
+			],
+			filterMultiple: false,
+			onFilter: (value, record) => record.eSemester.value === value,
 		},
 		{
 			title: '班级名称',
@@ -330,6 +368,16 @@
 					total: 0, // 总数，必须先有
 					showQuickJumper: true,
 					showTotal: (total) => `共 ${total} 条`, // 显示总数
+					onShowSizeChange: (current, pageSize) => {
+						this.paginationOpt.defaultCurrent = 1;
+						this.paginationOpt.defaultPageSize = pageSize;
+					},
+					// 改变每页数量时更新显示
+					//onChange页码改变的回调，参数是改变后的页码及每页条数
+					onChange: (current, size) => {
+						this.paginationOpt.defaultCurrent = current;
+						this.paginationOpt.defaultPageSize = size;
+					},
 				},
 				upform: {
 					eId: '',
@@ -341,7 +389,7 @@
 					eRemark: '',
 					courseId: '',
 				},
-				rules:{
+				rules: {
 					cId: [{
 						required: true,
 						message: '请输入修改的课程',
@@ -394,8 +442,7 @@
 			teacherload() {
 				request.post('/api/admin/teacher/select')
 					.then(res => {
-						console.log(res.data)
-						//this.dataSource.classname = res.data.fclass.classname
+						//console.log(res.data)
 						this.datas = res.data
 						//this.reload();  //刷新
 					})
@@ -406,7 +453,7 @@
 			load() {
 				request.post('/api/admin/addcourse/select')
 					.then(res => {
-						console.log(res.data)
+						//console.log(res.data)
 						this.loads = res.data
 					})
 					.catch(error => {
@@ -439,8 +486,7 @@
 			courseload() {
 				request.post('/api/admin/course/select')
 					.then(res => {
-						console.log(res.data)
-						//this.dataSource.classname = res.data.fclass.classname
+						//console.log(res.data)
 						this.dataSource = res.data
 						//this.reload();  //刷新
 					})
@@ -455,8 +501,12 @@
 						//console.log(values);
 						request.post('/api/admin/course/add', datas)
 							.then(res => {
-								this.$message.success("添加成功！")
-								this.reload(); //刷新
+								if (res.code == "100") {
+									this.$message.error(res.msg)
+								} else {
+									this.$message.success("添加成功！")
+									this.reload(); //刷新
+								}
 							})
 							.catch(error => {
 								this.$message.error("添加失败！")
@@ -500,6 +550,8 @@
 				clearFilters();
 				this.searchText = '';
 			},
+		},
+		computed: {
 
 		},
 		components: {
