@@ -442,7 +442,6 @@
 			teacherload() {
 				request.post('/api/admin/teacher/select')
 					.then(res => {
-						//console.log(res.data)
 						this.datas = res.data
 						//this.reload();  //刷新
 					})
@@ -486,7 +485,6 @@
 			courseload() {
 				request.post('/api/admin/course/select')
 					.then(res => {
-						//console.log(res.data)
 						this.dataSource = res.data
 						//this.reload();  //刷新
 					})

@@ -17,16 +17,20 @@
 							<!-- 操作 5 -->
 							<router-link to="studentlist">个人信息</router-link>
 						</a-menu-item>
+<!-- 						<a-menu-item key="2">
+							 studenthouse 
+							<router-link to="">家庭信息</router-link>
+						</a-menu-item> -->
 					</a-menu-item-group>
 					<a-menu-item-group key="g2">
 						<template slot="title">
 							<a-icon type="solution" /><span> 学校信息</span>
 						</template>
-						<a-menu-item key="2">
+						<a-menu-item key="3">
 							<!-- 操作 5 -->
 							<router-link to="teacherlist">课程信息</router-link>
 						</a-menu-item>
-						<a-menu-item key="3">
+						<a-menu-item key="4">
 							<!-- 操作 6 -->
 							<router-link to="scorelist">成绩信息</router-link>
 						</a-menu-item>
@@ -35,7 +39,7 @@
 						<template slot="title">
 							<a-icon type="security-scan" /><span> 账户信息</span>
 						</template>
-						<a-menu-item key="4">
+						<a-menu-item key="5">
 							<!-- 操作 5 -->
 							<router-link to="upstudent">修改密码</router-link>
 						</a-menu-item>

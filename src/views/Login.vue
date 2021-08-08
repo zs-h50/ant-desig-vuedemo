@@ -112,7 +112,7 @@
 									this.form.resetFields();
 									this.reload();									
 								}
-								console.log(res)
+								//console.log(res)
 							})
 							.catch(error => {
 								this.$message.error('用户名或密码错误,请重新输入!');

@@ -117,13 +117,16 @@
 						//console.log(values);
 						request.post('/api/admin/house/add', datas)
 							.then(res => {
-								this.$message.success("添加成功！")
-								this.form.resetFields();
-								this.reload(); //刷新
+								if(res.code=="100"){
+									this.$message.error(res.msg)
+								}else{
+									this.$message.success("添加成功！")
+									this.reload(); //刷新
+								}
 							})
 							.catch(error => {
 								this.$message.error("添加失败！")
-								this.form.resetFields();
+								//this.form.resetFields();
 								//this.reload();  //刷新
 							})
 					}

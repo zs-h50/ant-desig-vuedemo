@@ -62,19 +62,19 @@
 			<a-input v-decorator="['situation', { rules: [{ required: false}] }]" placeholder="请输入学生的家庭状况" />
 		</a-form-item>
 		<a-form-item label="父亲姓名">
-			<a-input v-decorator="['father', { rules: [{ required: false, message: '学生父亲姓名不能为空' }] }]"
+			<a-input disabled v-decorator="['father', { rules: [{ required: false, message: '学生父亲姓名不能为空' }] }]"
 				placeholder="请输入学生的父亲姓名" />
 		</a-form-item>
 		<a-form-item label="父亲电话">
-			<a-input v-decorator="['fatherphone', { rules: [{ required: false, message: '学生父亲电话不能为空' }] }]"
+			<a-input disabled v-decorator="['fatherphone', { rules: [{ required: false, message: '学生父亲电话不能为空' }] }]"
 				placeholder="请输入学生的父亲电话" />
 		</a-form-item>
 		<a-form-item label="母亲姓名">
-			<a-input v-decorator="['mather', { rules: [{ required: false, message: '学生母亲姓名不能为空' }] }]"
+			<a-input disabled v-decorator="['mather', { rules: [{ required: false, message: '学生母亲姓名不能为空' }] }]"
 				placeholder="请输入学生的母亲姓名" />
 		</a-form-item>
 		<a-form-item label="母亲电话">
-			<a-input v-decorator="['matherphone', { rules: [{ required: false, message: '学生母亲电话不能为空' }] }]"
+			<a-input disabled v-decorator="['matherphone', { rules: [{ required: false, message: '学生母亲电话不能为空' }] }]"
 				placeholder="请输入学生的母亲电话" />
 		</a-form-item>
 		<a-form-item label="就学状态">
@@ -104,16 +104,38 @@
 				</a-select-option>
 			</a-select>
 		</a-form-item>
-		<a-form-item :wrapper-col="{ span: 12, offset: 10 }">
+		<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+			<a-upload name="avatar" list-type="picture-card" class="avatar-uploader" :show-upload-list="false"
+				action="http://localhost:9091/" :before-upload="beforeUpload"
+				@change="handleChange">
+				<img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+				<div v-else>
+					<a-icon :type="loading ? 'loading' : 'plus'" />
+					<div class="ant-upload-text">
+						点击上传
+					</div>
+				</div>
+			</a-upload>
+		</a-form-item>
+		<a-form-item :wrapper-col="{ span: 12, offset: 20 }">
 			<a-button type="primary" html-type="submit">
 				提交
 			</a-button>
 		</a-form-item>
+
 	</a-form>
 </template>
 
 <script>
 	import request from '@/utils/request.js'
+
+	// 头像上传
+	function getBase64(img, callback) {
+		const reader = new FileReader();
+		reader.addEventListener('load', () => callback(reader.result));
+		reader.readAsDataURL(img);
+	}
+
 	export default {
 		inject: ['reload'],
 		data() {
@@ -121,6 +143,8 @@
 				formLayout: 'horizontal',
 				form: this.$form.createForm(this),
 				dataSource: [],
+				loading: false,
+				imageUrl: '',
 			};
 		},
 		created() {
@@ -144,29 +168,70 @@
 						const datas = JSON.parse(JSON.stringify(values))
 						//console.log(values);
 						request.post('/api/admin/studentinfo/add', datas)
-						.then(res => {
-							if(res.code == "-1"){
-								this.$message.error("学生已存在，请重填写！")
-							}else if(res.code == "0"){
-								this.$message.success("学生添加成功！")
-								this.form.resetFields();
-								this.reload(); //刷新
-							}
-						})
+							.then(res => {
+								if (res.code == "-1") {
+									this.$message.error("学生已存在，请重填写！")
+								} else if (res.code == "0") {
+									this.$message.success("学生添加成功！")
+									this.form.resetFields();
+									this.reload(); //刷新
+								}
+							})
 					}
 				});
 			},
+			
+			// 头像上传
+			    handleChange(info) {
+			      if (info.file.status === 'uploading') {
+			        this.loading = true;
+			        return;
+			      }
+			      if (info.file.status === 'done') {
+			        // 获取此 url。
+			        getBase64(info.file.originFileObj, imageUrl => {
+			          this.imageUrl = imageUrl;
+			          this.loading = false;
+			        });
+			      }
+			    },
+			    beforeUpload(file) {
+			      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+			      if (!isJpgOrPng) {
+			        this.$message.error('只能上传JPG文件！');
+			      }
+			      const isLt2M = file.size / 1024 / 1024 < 2;
+			      if (!isLt2M) {
+			        this.$message.error('图片必须小于2MB！');
+			      }
+			      return isJpgOrPng && isLt2M;
+			    },
 		},
 	};
 </script>
 <style scoped>
-	.ant-form{
+	.ant-form {
 		width: 100%;
 		display: flex;
-		flex-flow:row wrap;
-		}
-	.ant-form-item{
+		flex-flow: row wrap;
+	}
+
+	.ant-form-item {
 		width: 50%;
 	}
-	
+
+	.avatar-uploader>.ant-upload {
+		width: 128px;
+		height: 128px;
+	}
+
+	.ant-upload-select-picture-card i {
+		font-size: 20px;
+		color: #999;
+	}
+
+	.ant-upload-select-picture-card .ant-upload-text {
+		margin-top: 8px;
+		color: #666;
+	}
 </style>

@@ -12,7 +12,18 @@
 				<span v-if="record.fettle == 2">休学</span>
 				<span v-if="record.fettle == 3">退学</span>
 			</span>
-			
+			<span slot="father" slot-scope="text,record" v-if="record.houseHold.genre == 4">
+				<span>{{record.houseHold.hName}}</span>
+			</span>
+			<span slot="fatherphone" slot-scope="text,record" v-if="record.houseHold.genre == 4">
+				{{record.houseHold.hPhone}}
+			</span>
+			<span slot="mather" slot-scope="text,record" v-if="record.houseHold.genre == 5">
+				{{record.houseHold.hName}}
+			</span>
+			<span slot="matherphone" slot-scope="text,record" v-if="record.houseHold.genre == 5">
+				<span>{{record.houseHold.hPhone}}</span>
+			</span>
 			<!-- <a slot="action" slot-scope="text">action</a> -->
 		
 				
@@ -21,20 +32,18 @@
 				      title="修改"
 				      :visible="visibles"
 					  :footer="null"
+					  width="70%"
 					  @cancel="handleCancels"
 				    >
-					<a-form-model :form="upform" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
-						<a-form-item label="姓名">
-							<a-input v-model:value="upform.sName" v-decorator="['sName', { rules: [{ required: true, message: '学生姓名不能为空'}]}]"  placeholder="请输入学生的姓名" />
-						</a-form-item>
-						<a-form-item label="学号">
-							<a-input disabled disabled v-model:value="upform.sNo" v-decorator="['sNo', { rules: [{ required: true, message: '学生学号不能为空' }] }]" placeholder="请输入学生的学号" />
-						</a-form-item>
-						<a-form-item label="性别">
-							<a-select disabled v-model:value="upform.gender" v-decorator="[
-					      'gender',
-					      { rules: [{ required: true, message: '性别不能为空' }] },
-					    ]" placeholder="选择学生的性别">
+					<a-form-model :form="upform" ref="ruleForm" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="editSubmit">
+						<a-form-model-item label="姓名">
+							<a-input disabled v-model="upform.sName"  placeholder="请输入学生的姓名" />
+						</a-form-model-item>
+						<a-form-model-item label="学号">
+							<a-input disabled v-model="upform.sNo" placeholder="请输入学生的学号" />
+						</a-form-model-item>
+						<a-form-model-item label="性别">
+							<a-select disabled v-model="upform.gender" placeholder="选择学生的性别">
 								<a-select-option value="1">
 									男
 								</a-select-option>
@@ -42,52 +51,49 @@
 									女
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="联系方式">
-							<a-input v-model:value="upform.sPhone" v-decorator="['sPhone', { rules: [{ required: true, message: '学生联系方式不能为空' },{min:11,len:11,message: '请输入正确的格式'}] }]" placeholder="请输入学生的联系方式" />
-						</a-form-item>
-						<a-form-item label="邮箱">
-							<a-input v-model:value="upform.email" v-decorator="['email', { rules: [{ required: true, message: '学生邮箱不能为空' },{type:'email',message: '请输入正确的格式'}] }]" placeholder="请输入学生的邮箱方式" />
-						</a-form-item>
+						</a-form-model-item>
+						<a-form-model-item ref="sPhone" prop="sPhone" label="联系方式">
+							<a-input v-model="upform.sPhone" placeholder="请输入学生的联系方式" />
+						</a-form-model-item>
+						<a-form-model-item ref="email" prop="email" label="邮箱">
+							<a-input v-model="upform.email" placeholder="请输入学生的邮箱方式" />
+						</a-form-model-item>
 						<!-- 出生日期 -->
-						<a-form-item label="出生日期" style="margin-bottom:0;">
-						    <a-date-picker v-model:value="upform.birthday" v-decorator="['birthday', { rules: [{ required: true, message: '学生出生日期不能为空' }] }]" style="width: 100%" />
-						</a-form-item>
-						<a-form-item label="身份证号">
-							<a-input disabled v-model:value="upform.idCard" v-decorator="['idCard', { rules: [{ required: true, message: '学生身份证号不能为空' },{min:18,len:18,message: '请输入正确的格式'}] }]" placeholder="请输入学生的身份证号" />
-						</a-form-item>
-						<a-form-item label="联系人">
-							<a-input v-model:value="upform.contact" v-decorator="['contact', { rules: [{ required: true, message: '学生联系人不能为空' }] }]" placeholder="请输入学生的联系人" />
-						</a-form-item>
-						<a-form-item label="联系人方式">
-							<a-input v-model:value="upform.contactphone" v-decorator="['contactphone', { rules: [{ required: true, message: '学生联系人方式不能为空' },{min:11,len:11,message: '请输入正确的格式'}] }]" placeholder="请输入学生的联系人方式" />
-						</a-form-item>
-						<a-form-item label="住址">
-							<a-input v-model:value="upform.address" v-decorator="['address', { rules: [{ required: true, message: '学生住址不能为空' }] }]" placeholder="请输入学生的住址" />
-						</a-form-item>
-						<a-form-item label="邮编">
-							<a-input v-model:value="upform.postcode" v-decorator="['postcode', { rules: [{ required: true, message: '学生邮编不能为空' },{min:5,len:5,message: '请输入正确的格式'}] }]" placeholder="请输入学生的邮编" />
-						</a-form-item>
-						<a-form-item label="家庭状况">
-							<a-input v-model:value="upform.situation" v-decorator="['situation', { rules: [{ required: false}] }]" placeholder="请输入学生的家庭状况" />
-						</a-form-item>
-						<a-form-item label="父亲姓名">
-							<a-input v-model:value="upform.father" v-decorator="['father', { rules: [{ required: false, message: '学生父亲姓名不能为空' }] }]" placeholder="请输入学生的父亲姓名" />
-						</a-form-item>
-						<a-form-item label="父亲电话">
-							<a-input v-model:value="upform.fatherphone" v-decorator="['fatherphone', { rules: [{ required: false, message: '学生父亲电话不能为空' },{min:11,len:11,message: '请输入正确的格式'}] }]" placeholder="请输入学生的父亲电话" />
-						</a-form-item>
-						<a-form-item label="母亲姓名">
-							<a-input v-model:value="upform.mather" v-decorator="['mather', { rules: [{ required: false, message: '学生母亲姓名不能为空' }] }]" placeholder="请输入学生的母亲姓名" />
-						</a-form-item>
-						<a-form-item label="母亲电话">
-							<a-input v-model:value="upform.matherphone" v-decorator="['matherphone', { rules: [{ required: false, message: '学生母亲电话不能为空' },{min:11,len:11,message: '请输入正确的格式'}] }]" placeholder="请输入学生的母亲电话" />
-						</a-form-item>
-						<a-form-item label="就学状态">
-							<a-select disabled v-model:value="upform.fettle" v-decorator="[
-						  'fettle',
-						  { rules: [{ required: true, message: '就学状态不能为空' }] },
-						]" placeholder="选择类型">
+						<a-form-model-item ref="birthday" prop="birthday" label="出生日期" style="margin-bottom:0;">
+						    <a-date-picker v-model="upform.birthday" style="width: 100%" />
+						</a-form-model-item>
+						<a-form-model-item label="身份证号">
+							<a-input disabled v-model="upform.idCard" placeholder="请输入学生的身份证号" />
+						</a-form-model-item>
+						<a-form-model-item ref="contact" prop="contact" label="联系人">
+							<a-input v-model="upform.contact"  placeholder="请输入学生的联系人" />
+						</a-form-model-item>
+						<a-form-model-item ref="contactphone" prop="contactphone" label="联系人方式">
+							<a-input v-model="upform.contactphone" placeholder="请输入学生的联系人方式" />
+						</a-form-model-item>
+						<a-form-model-item ref="address" prop="address" label="住址">
+							<a-input v-model="upform.address" placeholder="请输入学生的住址" />
+						</a-form-model-item>
+						<a-form-model-item ref="postcode" prop="postcode" label="邮编">
+							<a-input v-model="upform.postcode" placeholder="请输入学生的邮编" />
+						</a-form-model-item>
+						<a-form-model-item ref="situation" prop="situation" label="家庭状况">
+							<a-input v-model="upform.situation" placeholder="请输入学生的家庭状况" />
+						</a-form-model-item>
+						<a-form-model-item label="父亲姓名">
+							<a-input disabled v-model="upform.father" placeholder="请输入学生的父亲姓名" />
+						</a-form-model-item>
+						<a-form-model-item label="父亲电话">
+							<a-input disabled v-model="upform.fatherphone" placeholder="请输入学生的父亲电话" />
+						</a-form-model-item>
+						<a-form-model-item label="母亲姓名">
+							<a-input disabled v-model="upform.mather" placeholder="请输入学生的母亲姓名" />
+						</a-form-model-item>
+						<a-form-model-item label="母亲电话">
+							<a-input disabled v-model="upform.matherphone" placeholder="请输入学生的母亲电话" />
+						</a-form-model-item>
+						<a-form-model-item label="就学状态">
+							<a-select disabled v-model="upform.fettle"  placeholder="选择类型">
 								<a-select-option value="1">
 									在读
 								</a-select-option>
@@ -98,18 +104,18 @@
 									退学
 								</a-select-option>
 							</a-select>
-						</a-form-item>
-						<a-form-item label="备注">
-							<a-input v-model:value="upform.remark" v-decorator="['remark', { rules: [{ required: false}] }]" placeholder="备注" />
-						</a-form-item>
-						<a-form-item label="班级标识">
-							<a-input disabled v-model:value="upform.cId"  v-decorator="['cId', { rules: [{ required: true, message: '学生班级标识不能为空' }] }]" placeholder="班级标识" />
-						</a-form-item>
-						<a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+						</a-form-model-item>
+						<a-form-model-item label="备注">
+							<a-input v-model="upform.remark" placeholder="备注" />
+						</a-form-model-item>
+						<a-form-model-item label="班级标识">
+							<a-input disabled v-model:value="upform.cId" placeholder="班级标识" />
+						</a-form-model-item>
+						<a-form-model-item :wrapper-col="{ span: 12, offset: 20 }">
 							<a-button type="primary" html-type="submit">
 								提交
 							</a-button>
-						</a-form-item>
+						</a-form-model-item>
 					</a-form-model>
 				</a-modal>
 			</a-button>
@@ -223,31 +229,43 @@
 		},
 		{
 			title: '父亲名称',
-			dataIndex: 'father',
+			dataIndex: 'houseHold.hName',
 			key: '12',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'father'
+			},
 		},
 		{
 			title: '父亲电话',
-			dataIndex: 'fatherphone',
+			dataIndex: 'houseHold.hPhone',
 			key: '13',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'fatherphone'
+			},
 		},
 		{
 			title: '母亲姓名',
-			dataIndex: 'mather',
+			dataIndex: 'houseHold.hName',
 			key: '14',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'mather'
+			},
 		},
 		{
 			title: '母亲电话',
-			dataIndex: 'matherphone',
+			dataIndex: 'houseHold.hPhone',
 			key: '15',
 			width: 150,
 			align: 'center',
+			scopedSlots: {
+				customRender: 'matherphone'
+			},
 		},
 		{
 			title: '当前状态',
@@ -287,6 +305,7 @@
 			return {
 				dataSource,
 				columns,
+				dates:'',
 				visibles: false,
 				paginationOpt: {
 					defaultCurrent: 1, // 默认当前页数
@@ -316,7 +335,72 @@
 					cId:'',
 					situation:''
 				},
-				dates:'',
+				rules:{
+					sPhone:[
+						{
+							required: true,
+							message: '请输入修改的电话号码',
+							trigger: 'blur'
+						},
+						{
+							min:11,
+							len:11,
+							message: '请输入正确的11位格式电话号码'
+						}
+					],
+					email:[
+						{
+							required: true,
+							message: '请输入修改的邮箱',
+							trigger: 'blur'
+						},
+						{
+							type:'email',
+							message: '请输入正确的邮箱格式，如XX.@XX.com'
+						}
+					],
+					birthday:[
+						{
+							required: true,
+							message: '请输入修改的出生日期',
+							trigger: 'blur'
+						}
+					],
+					contact:[
+						{
+							required: true,
+							message: '请输入修改的联系人',
+							trigger: 'blur'
+						}
+					],
+					contactphone:[
+						{
+							required: true,
+							message: '请输入修改的联系人方式',
+							trigger: 'blur'
+						},
+						{
+							min:11,
+							len:11,
+							message: '请输入正确的11位格式电话号码'
+						}
+					],
+					address:[
+						{
+							required: true,
+							message: '请输入修改的地址',
+							trigger: 'blur'
+						}
+					],
+					postcode:[
+						{
+							required: true,
+							message: '请输入修改的邮编',
+							trigger: 'blur'
+						}
+					]
+				},
+				
 			};
 		},
 		created() {
@@ -364,3 +448,15 @@
 		},
 	};
 </script>
+<style scoped>
+	.ant-form {
+		width: 100%;
+		display: flex;
+		/* flex-flow:wrap 规定灵活的项目在必要的时候拆行或拆列。 */
+		flex-flow: wrap;
+	}
+	
+	.ant-form-item {
+		width: 50%;
+	}
+</style>

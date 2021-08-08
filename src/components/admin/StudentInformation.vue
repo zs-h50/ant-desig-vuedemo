@@ -20,17 +20,17 @@
 				<span v-if="record.gender == 1">男</span>
 			</span>
 			
-			<span slot="father" slot-scope="text,record" v-if="record.genre == 4">
-				{{record.hName}}
+			<span slot="father" slot-scope="text,record" v-if="record.houseHold.genre == 4">
+				<span>{{record.houseHold.hName}}</span>
 			</span>
-			<span slot="fatherphone" slot-scope="text,record" v-if="record.genre == 4">
-				{{record.hPhone}}
+			<span slot="fatherphone" slot-scope="text,record" v-if="record.houseHold.genre == 4">
+				{{record.houseHold.hPhone}}
 			</span>
-			<span slot="mather" slot-scope="text,record" v-if="record.genre == 5">
-				{{record.hName}}
+			<span slot="mather" slot-scope="text,record" v-if="record.houseHold.genre == 5">
+				{{record.houseHold.hName}}
 			</span>
-			<span slot="matherphone" slot-scope="text,record" v-if="record.genre == 5">
-				<span>{{record.hPhone}}</span>
+			<span slot="matherphone" slot-scope="text,record" v-if="record.houseHold.genre == 5">
+				<span>{{record.houseHold.hPhone}}</span>
 			</span>
 			
 			<span slot="fettle" slot-scope="text,record">
@@ -88,16 +88,16 @@
 							<a-input v-model="upform.situation" placeholder="请输入学生的家庭状况" />
 						</a-form-model-item>
 						<a-form-model-item ref="father" prop="father" label="父亲姓名">
-							<a-input v-model="upform.father" placeholder="请输入学生的父亲姓名" />
+							<a-input disabled v-model="upform.father" placeholder="请输入学生的父亲姓名" />
 						</a-form-model-item>
 						<a-form-model-item ref="fatherphone" prop="fatherphone" label="父亲电话">
-							<a-input v-model="upform.fatherphone" placeholder="请输入学生的父亲电话" />
+							<a-input disabled v-model="upform.fatherphone" placeholder="请输入学生的父亲电话" />
 						</a-form-model-item>
 						<a-form-model-item ref="mather" prop="mather" label="母亲姓名">
-							<a-input v-model="upform.mather" placeholder="请输入学生的母亲姓名" />
+							<a-input disabled v-model="upform.mather" placeholder="请输入学生的母亲姓名" />
 						</a-form-model-item>
 						<a-form-model-item ref="matherphone" prop="matherphone" label="母亲电话">
-							<a-input v-model="upform.matherphone" placeholder="请输入学生的母亲电话" />
+							<a-input disabled v-model="upform.matherphone" placeholder="请输入学生的母亲电话" />
 						</a-form-model-item>
 						<a-form-model-item ref="fettle" prop="fettle" label="就学状态">
 							<a-select v-model="upform.fettle" placeholder="选择类型">
@@ -528,7 +528,7 @@
 			studentload() {
 				request.post('/api/admin/studentinfo/select')
 					.then(res => {
-						// console.log(res.data)
+						//console.log(res.data.houseHold)
 						//this.dataSource.classname = res.data.fclass.classname
 						this.dataSource = res.data
 						//this.reload();  //刷新
@@ -585,5 +585,18 @@
 
 	.ant-form-item {
 		width: 50%;
+	}
+	.avatar-uploader > .ant-upload {
+	  width: 128px;
+	  height: 128px;
+	}
+	.ant-upload-select-picture-card i {
+	  font-size: 32px;
+	  color: #999;
+	}
+	
+	.ant-upload-select-picture-card .ant-upload-text {
+	  margin-top: 8px;
+	  color: #666;
 	}
 </style>

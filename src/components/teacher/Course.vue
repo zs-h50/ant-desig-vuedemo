@@ -147,9 +147,7 @@
 				request.post('/api/teacher/course/select', this.dates)
 					.then(res => {
 						console.log(res.data)
-						//this.dataSource.classname = res.data.fclass.classname
 						this.dataSource = res.data
-						//this.reload();  //刷新
 					})
 					.catch(error => {
 						this.$message.error("查询错误！！")
