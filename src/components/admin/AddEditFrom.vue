@@ -32,7 +32,7 @@
 				placeholder="请输入学生的邮箱方式" />
 		</a-form-item>
 		<!-- 出生日期 -->
-		<a-form-item label="出生日期" style="margin-bottom:0;">
+		<a-form-item label="出生日期" format="YYYY-MM-DD" style="margin-bottom:0;">
 			<a-date-picker v-decorator="['birthday', { rules: [{ required: true, message: '学生出生日期不能为空' }] }]"
 				style="width: 100%" />
 		</a-form-item>

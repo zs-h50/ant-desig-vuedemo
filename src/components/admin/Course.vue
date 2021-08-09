@@ -71,7 +71,7 @@
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1600, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1600}" :pagination="paginationOpt"
 			row-key="eId">
 			<div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
 				style="padding: 8px">
@@ -275,15 +275,15 @@
 			},
 			filters: [{
 					text: '第一学期',
-					value: '第一学期',
+					value: '1',
 				},
 				{
 					text: '第二学期',
-					value: '第二学期',
+					value: '2',
 				},
 			],
 			filterMultiple: false,
-			onFilter: (value, record) => record.eSemester.value === value,
+			onFilter: (value, record) => record.eSemester.value === 0,
 		},
 		{
 			title: '班级名称',
@@ -486,6 +486,7 @@
 				request.post('/api/admin/course/select')
 					.then(res => {
 						this.dataSource = res.data
+						// this.paginationOpt.total = res.data.total
 						//this.reload();  //刷新
 					})
 					.catch(error => {

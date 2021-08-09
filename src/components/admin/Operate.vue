@@ -126,7 +126,13 @@
 					identity: ''
 				},
 				rules: {
-
+					password:[
+						{
+							required: true,
+							message: '请输入修改的密码',
+							trigger: 'blur'
+						}
+					]
 				}
 			};
 		},

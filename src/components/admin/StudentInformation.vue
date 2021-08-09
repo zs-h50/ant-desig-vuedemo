@@ -8,7 +8,7 @@
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 3200, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x:3200}" :pagination="paginationOpt"
 			row-key="sId">
 			<!-- 序号 -->
 			<span slot="num" slot-scope="text,record,index">
@@ -66,7 +66,7 @@
 							<a-input v-model="upform.email" placeholder="请输入学生的邮箱方式" />
 						</a-form-model-item>
 						<!-- 出生日期 -->
-						<a-form-model-item ref="birthday" prop="birthday" label="出生日期" style="margin-bottom:0;">
+						<a-form-model-item ref="birthday" format="YYYY-MM-DD" prop="birthday" label="出生日期" style="margin-bottom:0;">
 							<a-date-picker v-model="upform.birthday" style="width: 100%" />
 						</a-form-model-item>
 						<a-form-model-item ref="idCard" prop="idCard" label="身份证号">

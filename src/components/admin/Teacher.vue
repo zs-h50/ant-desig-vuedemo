@@ -118,7 +118,7 @@
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1950, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1950}" :pagination="paginationOpt"
 			row-key="tId">
 			<span slot="tGender" slot-scope="text,record">
 				<span v-if="record.tGender == 0">女</span>

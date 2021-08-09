@@ -8,7 +8,7 @@
 			</a-modal>
 		</a-button>
 
-		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1550, y: 385 }" :pagination="paginationOpt"
+		<a-table :columns="columns" :data-source="dataSource" :scroll="{ x: 1550}" :pagination="paginationOpt"
 			row-key="hId">
 
 			<span slot="genre" slot-scope="text,record">

@@ -344,7 +344,6 @@
 						this.reload();
 					})
 			},
-
 			delstu(id) {
 				console.log(id)
 				//const sid = id
